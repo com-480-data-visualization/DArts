@@ -23,19 +23,13 @@ For this project, we will use the Museum of Modern Art (MoMA) Collection dataset
 
 The dataset consists of two main tables:
 
-Artworks (~160,000 records), containing information such as title, year of creation, medium, department, dimensions, and acquisition date.
+- Artworks (~160,000 records), containing information such as title, year of creation, medium, department, dimensions, and acquisition date.
 
-Artists (~15,000 records), containing attributes such as nationality, gender, and birth/death year.
+- Artists (~15,000 records), containing attributes such as nationality, gender, and birth/death year.
 
 The dataset is well-structured and widely used in data analysis and visualization projects, making it suitable for our study. However, some preprocessing will be required before visualization.
 
-In particular:
-
-The artworks dataset stores artist identifiers as arrays, which must be expanded and linked to the artists table.
-
-Some categorical variables (e.g., medium or classification) contain inconsistent textual values that may require normalization.
-
-Certain attributes, such as gender or nationality, contain missing values that need to be handled during analysis.
+In particular, the artworks dataset stores artist identifiers as arrays, which must be expanded and linked to the artists table. Some categorical variables (e.g., medium or classification) contain inconsistent textual values that may require normalization. Certain attributes, such as gender or nationality, contain missing values that need to be handled during analysis.
 
 Overall, the dataset quality is high and requires moderate preprocessing, mainly involving table joins, cleaning of categorical variables, and aggregation by time periods or geographic regions. Since the data is already structured and publicly available, the focus of the project will remain on analysis and visualization rather than data collection, which aligns with the objectives of this course.
 https://github.com/MuseumofModernArt/collection
@@ -58,7 +52,6 @@ The target audience includes students, researchers, and anyone interested in art
 > - Show some basic statistics and get insights about the data
 
 ### Related work
-
 
 > - What others have already done with the data?
 > - Why is your approach original?
