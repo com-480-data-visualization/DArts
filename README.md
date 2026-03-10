@@ -19,7 +19,7 @@ Please, fill the following sections about your project.
 
 ### Dataset
 
-For this project, we will use the Museum of Modern Art (MoMA) Collection dataset, publicly available on GitHub. This dataset contains detailed metadata about artworks and artists included in the MoMA collection.
+For this project, we will use the [Museum of Modern Art (MoMA) Collection](https://github.com/MuseumofModernArt/collection) dataset, publicly available on GitHub. This dataset contains detailed metadata about artworks and artists included in the MoMA collection.
 
 The dataset consists of two main tables:
 
@@ -32,7 +32,6 @@ The dataset is well-structured and widely used in data analysis and visualizatio
 In particular, the artworks dataset stores artist identifiers as arrays, which must be expanded and linked to the artists table. Some categorical variables (e.g., medium or classification) contain inconsistent textual values that may require normalization. Certain attributes, such as gender or nationality, contain missing values that need to be handled during analysis.
 
 Overall, the dataset quality is high and requires moderate preprocessing, mainly involving table joins, cleaning of categorical variables, and aggregation by time periods or geographic regions. Since the data is already structured and publicly available, the focus of the project will remain on analysis and visualization rather than data collection, which aligns with the objectives of this course.
-https://github.com/MuseumofModernArt/collection
 
 ### Problematic
 
@@ -53,10 +52,12 @@ The target audience includes students, researchers, and anyone interested in art
 
 ### Related work
 
-> - What others have already done with the data?
-> - Why is your approach original?
+A number of projects have been created using the MoMA collection dataset, spanning from articles to data visualizations. An article by FiveThirtyEight popularized the dataset in 2015, extrapolating statistics on the sizes of all paintings in the collection, artists with the largest number of works in the collection, aquisition data, and painting mediums. Since then, several more projects have used the dataset to analyze gender and nationality distributions and categorize aquisitions by various metrics. However, all of these existing projects produces fairly standard bar charts, pie charts, and choropleths -- none of them provide interactive ways to analyze and explore the data. 
+
+Our project differs as it aims to highlight the pace of change of the collection's demographic and geographic characteristics, rather than presenting a static representation as well. In this way, our aim is to produce a highly interactive, accessible, and informative platform for a general audience to explore these characteristics.
+
+
 > - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
-> - In case you are using a dataset that you have already explored in another context (ML or ADA course, semester project...), you are required to share the report of that work to outline the differences with the submission for this class.
 
 ## Milestone 2 (17th April, 5pm)
 
