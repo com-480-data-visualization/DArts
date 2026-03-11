@@ -47,8 +47,82 @@ The target audience includes students, researchers, and anyone interested in art
 
 ### Exploratory Data Analysis
 
-> Pre-processing of the data set you chose
-> - Show some basic statistics and get insights about the data
+The exploratory data analysis was conducted using Python (pandas, matplotlib, seaborn) in a Jupyter notebook. The complete analysis can be found in `notebooks/exploratory_analysis.ipynb`.
+
+#### Dataset Overview
+
+**Original Datasets:**
+- **Artworks**: 160,248 records with 30 columns
+- **Artists**: 15,803 records with 9 columns
+
+**After Data Cleaning:**
+- **Artworks**: 144,149 records (90.0% retention rate)
+- **Artists**: 11,879 records (75.2% retention rate)
+
+#### Data Preprocessing
+
+To ensure data quality for diversity analysis, we applied the following preprocessing steps:
+
+1. **Column Selection**: Removed irrelevant columns (physical dimensions, administrative data, URLs)
+2. **Missing Value Handling**: Kept only records with complete data in key diversity analysis columns
+3. **Data Standardization**: Normalized categorical variables for consistent analysis
+
+The cleaned dataset focuses on essential attributes for diversity analysis: demographics (gender, nationality), temporal data (creation dates), and artistic context (medium, department, classification).
+
+#### Key Findings
+
+**Gender Distribution (11,879 artists with complete data):**
+- Male: 9,536 artists (80.3%)
+- Female: 2,336 artists (19.7%)
+- Non-binary/Other: 7 artists (0.1%)
+
+The analysis reveals a significant gender imbalance, with male artists representing over 4 times as many records as female artists in the cleaned dataset.
+
+**Geographic Distribution (Top 15 Nationalities):**
+1. American: 4,872 artists (41.0%)
+2. German: 883 artists (7.4%)
+3. French: 782 artists (6.6%)
+4. British: 779 artists (6.6%)
+5. Italian: 476 artists (4.0%)
+6. Japanese: 449 artists (3.8%)
+7. Swiss: 257 artists (2.2%)
+8. Dutch: 249 artists (2.1%)
+9. Russian: 245 artists (2.1%)
+10. Austrian: 225 artists (1.9%)
+11. Canadian: 182 artists (1.5%)
+12. Brazilian: 175 artists (1.5%)
+13. Mexican: 153 artists (1.3%)
+14. Argentine: 146 artists (1.2%)
+15. Spanish: 142 artists (1.2%)
+
+American artists dominate the collection (41.0%), with the top 5 nationalities representing 65.6% of all artists. This demonstrates significant geographic concentration in Western countries.
+
+**Temporal Coverage:**
+- **Span**: 1768-2026 (258 years of art history)
+- **Artworks with valid dates**: 92,564 records
+- **Peak periods**: Strong representation from 1960s-1980s, reflecting MoMA's focus on modern and contemporary art
+
+**Department Distribution (144,149 artworks):**
+1. Drawings & Prints: 72,279 artworks (50.1%)
+2. Architecture & Design: 33,084 artworks (23.0%)
+3. Photography: 30,659 artworks (21.3%)
+4. Painting & Sculpture: 4,072 artworks (2.8%)
+5. Media and Performance: 3,206 artworks (2.2%)
+6. Fluxus Collection: 484 artworks (0.3%)
+7. Film: 334 artworks (0.2%)
+8. Architecture & Design - Image Archive: 31 artworks (0.0%)
+
+Drawings & Prints dominate the collection (50.1%), while traditional Painting & Sculpture represents only 2.8% of the total collection.
+
+#### Summary Statistics
+
+The cleaned dataset provides a robust foundation for diversity analysis:
+- **Gender imbalance**: 80.3% male vs 19.7% female representation
+- **Geographic concentration**: Top 5 nationalities represent 65.6% of artists
+- **Departmental focus**: Drawings & Prints dominates with 50.1% of collection
+- **Temporal breadth**: 258 years of art history represented
+
+These patterns reveal significant opportunities for exploring diversity trends and representation changes over time through interactive visualizations.
 
 ### Related work
 
