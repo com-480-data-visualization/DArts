@@ -70,7 +70,7 @@ The original dataset contains 160,248 artworks (30 columns) and 15,803 artists (
  
 #### Summary
  
-These patterns,a 4:1 male-to-female ratio, strong Western geographic concentration, and departmental imbalances, confirm that meaningful diversity trends exist in the data and provide a strong foundation for interactive visual exploration over time.
+These patterns (a 4:1 male-to-female ratio, strong Western geographic concentration, and departmental imbalances) confirm that meaningful diversity trends exist in the data and provide a strong foundation for interactive visual exploration over time.
 
 ### Related work
 
