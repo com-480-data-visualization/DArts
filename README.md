@@ -56,7 +56,7 @@ The full exploratory analysis is available in `notebooks/exploratory_analysis.ip
  
 #### Dataset Overview
  
-The original dataset contains 160,248 artworks (30 columns) and 15,803 artists (9 columns). After cleaning — removing irrelevant columns, handling missing values, and normalizing categories — we retained 144,149 artworks (90.0%) and 11,879 artists (75.2%).
+The original dataset contains 160,248 artworks (30 columns) and 15,803 artists (9 columns). After cleaning (removing irrelevant columns, handling missing values, and normalizing categories) we retained 144,149 artworks (90.0%) and 11,879 artists (75.2%).
  
 #### Key Findings
  
@@ -70,7 +70,7 @@ The original dataset contains 160,248 artworks (30 columns) and 15,803 artists (
  
 #### Summary
  
-These patterns — a 4:1 male-to-female ratio, strong Western geographic concentration, and departmental imbalances — confirm that meaningful diversity trends exist in the data and provide a strong foundation for interactive visual exploration over time.
+These patterns,a 4:1 male-to-female ratio, strong Western geographic concentration, and departmental imbalances, confirm that meaningful diversity trends exist in the data and provide a strong foundation for interactive visual exploration over time.
 
 ### Related work
 
