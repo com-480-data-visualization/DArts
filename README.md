@@ -76,10 +76,9 @@ These patterns (a 4:1 male-to-female ratio, strong Western geographic concentrat
 
 A number of projects have been created using the MoMA collection dataset, spanning from articles to data visualizations. An article by FiveThirtyEight popularized the dataset in 2015, extrapolating statistics on the sizes of all paintings in the collection, artists with the largest number of works in the collection, aquisition data, and painting mediums. Since then, several more projects have used the dataset to analyze gender and nationality distributions and categorize aquisitions by various metrics. However, all of these existing projects produces fairly standard bar charts, pie charts, and choropleths -- none of them provide interactive ways to analyze and explore the data. 
 
-Our project differs as it aims to highlight the pace of change of the collection's demographic and geographic characteristics, rather than presenting a static representation as well. In this way, our aim is to produce a highly interactive, accessible, and informative platform for a general audience to explore these characteristics.
+Our project differs as it aims to highlight the pace of change of the collection's demographic and geographic characteristics, rather than presenting a static representation as well. In this way, our aim is to produce a more interactive and accessible platform for a general audience to explore these characteristics.
 
-
-> - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
+We are taking inspiration from a previous project by one of our team members, found [here](https://epfl-ada.github.io/ada-2025-project-market-miners/frontend/index.html). In particular, it uses a 3D, interactive globe to present geographical data, which is also filterable by key parameters. 
 
 ## Milestone 2 (17th April, 5pm)
 
