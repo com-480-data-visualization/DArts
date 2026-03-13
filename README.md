@@ -36,13 +36,10 @@ Overall, the dataset quality is high and requires moderate preprocessing, mainly
 ### Problematic
 
 Museums play an important role in shaping cultural narratives by determining which artists and artworks are included in their collections. In recent years, questions about representation and diversity in major art institutions have gained increasing attention.
-
 This project aims to explore diversity within the Museum of Modern Art (MoMA) collection by analyzing the demographic and geographic characteristics of the artists represented. In particular, we investigate how representation varies according to gender, nationality, and time period, and whether the composition of the collection has evolved over time.
-
-Through interactive visualizations, the project seeks to reveal structural patterns that may not be immediately visible in raw data. For example, we will explore how gender representation changes across decades, how artists are geographically distributed, and whether certain artistic mediums or periods exhibit stronger diversity patterns.
-
+Through interactive visualizations, the project seeks to reveal structural patterns that may not be immediately visible in raw data. Our planned interface includes several coordinated views: an animated timeline showing how gender and nationality balance has shifted decade by decade, an interactive world map highlighting geographic concentration and its evolution, and filterable charts allowing users to explore representation across departments and artistic mediums. These views will be linked, so that selecting a time period or region in one view updates the others, enabling fluid exploration of the data.
+We plan to implement the project using D3.js for custom visualizations, combined with Svelte for building a responsive and modular interface. This stack allows us to create highly interactive, bindable components while keeping the codebase lightweight.
 Rather than evaluating curatorial decisions, our goal is to provide a data-driven perspective on the composition of a major modern art collection. By visualizing these patterns, we aim to offer an intuitive and exploratory interface that allows users to better understand how representation in modern art collections has evolved.
-
 The target audience includes students, researchers, and anyone interested in art history, cultural institutions, and the intersection between data visualization and cultural analysis.
 
 ### Exploratory Data Analysis
