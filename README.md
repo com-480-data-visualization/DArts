@@ -78,7 +78,7 @@ A number of projects have been created using the MoMA collection dataset, spanni
 
 Our project differs as it aims to highlight the pace of change of the collection's demographic and geographic characteristics, rather than presenting a static representation as well. In this way, our aim is to produce a more interactive and accessible platform for a general audience to explore these characteristics.
 
-We are taking inspiration from a previous project by one of our team members, found [here](https://epfl-ada.github.io/ada-2025-project-market-miners/frontend/index.html). In particular, it uses a 3D, interactive globe to present geographical data, which is also filterable by key parameters. 
+We are taking inspiration from a previous project by one of our team members, found [here](https://epfl-ada.github.io/ada-2025-project-market-miners/frontend/index.html). It employs several distinct visualizations, but the method we are most inspired by is a 3D, interactive globe that presents geographical data and allows users to click on different parts of the globe to read about certain events. This map, as well as the other visualizations on the page, can be filtered by key parameters as the user desires. 
 
 ## Milestone 2 (17th April, 5pm)
 
