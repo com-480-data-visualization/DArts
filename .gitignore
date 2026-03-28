@@ -1,0 +1,36 @@
+# MoMA Dataset files (tracked via submodule reference only)
+data/moma-collection/*.csv
+data/moma-collection/*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Data analysis outputs (optional - remove if you want to commit these)
+*.pkl
+*.pickle
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
