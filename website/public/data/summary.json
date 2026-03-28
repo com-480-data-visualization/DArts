@@ -1,0 +1,12 @@
+{
+  "total_artworks": 91881,
+  "total_artists": 11879,
+  "male_pct": 80.3,
+  "female_pct": 19.7,
+  "top_nationality": "American",
+  "top_nationality_pct": 41.0,
+  "unique_nationalities": 129,
+  "date_min": 1860,
+  "date_max": 2026,
+  "top_department": "Drawings & Prints"
+}
