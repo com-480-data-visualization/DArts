@@ -5,7 +5,17 @@
 
   let chartEl;
 
-  $effect(() => { if (chartEl && data.length) drawChart(data); });
+  let rangeKey = $derived(selectedDecade ? `${selectedDecade.min}-${selectedDecade.max}` : 'all');
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!chartEl) return;
+    if (!data.length) {
+      d3.select(chartEl).selectAll('*').remove();
+      return;
+    }
+    drawChart(data);
+  });
 
   function drawChart(tdata) {
     const el = d3.select(chartEl);

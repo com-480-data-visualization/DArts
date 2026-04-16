@@ -6,26 +6,61 @@
   let donutEl;
   let areaEl;
 
-  const genderColor = { male: 'var(--color-male)', female: 'var(--color-female)', '': 'var(--color-other)' };
-  const genderColorHex = { male: '#4a7fb5', female: '#c1440e', '': '#6a9e5f' };
+  const genderColorHex = { male: '#4a7fb5', female: '#c1440e', other: '#6a9e5f', '': '#6a9e5f' };
+  const genderOrder = ['male', 'female', 'other'];
 
-  function inRange(decade) {
-    if (!selectedDecade) return true;
-    return decade >= selectedDecade.min && decade <= selectedDecade.max;
+  function getGenderLabel(gender) {
+    const normalized = String(gender || '').trim().toLowerCase();
+    if (normalized === 'male' || normalized === 'female') return normalized;
+    return 'other';
+  }
+
+  function getGenderColor(gender) {
+    return genderColorHex[getGenderLabel(gender)] || genderColorHex.other;
   }
 
   let filteredGender = $derived.by(() => {
-    if (!selectedDecade) return data;
-    const filtered = byDecade.filter(d => inRange(d.decade));
+    const range = selectedDecade;
+    if (!range) return data;
+
+    const filtered = byDecade.filter(d => d.decade >= range.min && d.decade <= range.max);
     if (!filtered.length) return data;
-    // Aggregate by gender
+
     const map = {};
-    filtered.forEach(d => { map[d.gender] = (map[d.gender] || 0) + d.count; });
-    return Object.entries(map).map(([gender, count]) => ({ gender, count }));
+    filtered.forEach(d => {
+      const key = getGenderLabel(d.gender);
+      map[key] = (map[key] || 0) + d.count;
+    });
+
+    return Object.entries(map)
+      .map(([gender, count]) => ({ gender, count }))
+      .sort((a, b) => {
+        const orderDiff = genderOrder.indexOf(a.gender) - genderOrder.indexOf(b.gender);
+        return orderDiff !== 0 ? orderDiff : b.count - a.count;
+      });
   });
 
-  $effect(() => { if (donutEl && filteredGender.length) drawDonut(filteredGender); });
-  $effect(() => { if (areaEl && byDecade.length) drawArea(byDecade); });
+  let rangeKey = $derived(selectedDecade ? `${selectedDecade.min}-${selectedDecade.max}` : 'all');
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!donutEl) return;
+    if (!filteredGender.length) {
+      d3.select(donutEl).selectAll('*').remove();
+      return;
+    }
+    drawDonut(filteredGender);
+  });
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!areaEl) return;
+    if (!byDecade.length) {
+      d3.select(areaEl).selectAll('*').remove();
+      return;
+    }
+    drawArea(byDecade);
+  });
 
   function drawDonut(gdata) {
     const el = d3.select(donutEl);
@@ -34,7 +69,7 @@
     const size = 280, radius = size / 2 - 10;
     const svg = el.append('svg')
       .attr('viewBox', `0 0 ${size} ${size}`)
-      .append('g').attr('transform', `translate(${size/2},${size/2})`);
+      .append('g').attr('transform', `translate(${size / 2},${size / 2})`);
 
     const total = d3.sum(gdata, d => d.count);
     const pie = d3.pie().value(d => d.count).sort(null).padAngle(0.03);
@@ -44,10 +79,10 @@
       .data(pie(gdata))
       .join('path')
       .attr('d', arc)
-      .attr('fill', d => genderColorHex[d.data.gender] || '#999')
+      .attr('fill', d => getGenderColor(d.data.gender))
       .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))')
       .append('title')
-      .text(d => `${d.data.gender || 'other'}: ${d.data.count.toLocaleString()} (${(d.data.count/total*100).toFixed(1)}%)`);
+      .text(d => `${getGenderLabel(d.data.gender)}: ${d.data.count.toLocaleString()} (${(d.data.count / total * 100).toFixed(1)}%)`);
 
     svg.append('text')
       .attr('text-anchor', 'middle').attr('dy', '-0.1em')
@@ -58,18 +93,17 @@
     svg.append('text')
       .attr('text-anchor', 'middle').attr('dy', '1.4em')
       .attr('fill', 'var(--color-text-muted)').attr('font-size', '0.7rem')
-      .text(selectedDecade ? `${selectedDecade.min}s–${selectedDecade.max}s` : 'all periods');
+      .text(selectedDecade ? `${selectedDecade.min}s-${selectedDecade.max}s` : 'all periods');
 
-    // Legend below
     const legendDiv = el.append('div').style('display', 'flex').style('gap', '1.2rem')
       .style('justify-content', 'center').style('margin-top', '1rem');
 
     gdata.forEach(d => {
       const item = legendDiv.append('div').style('display', 'flex').style('align-items', 'center').style('gap', '0.35rem');
       item.append('div').style('width', '10px').style('height', '10px').style('border-radius', '50%')
-        .style('background', genderColorHex[d.gender] || '#999');
+        .style('background', getGenderColor(d.gender));
       item.append('span').style('font-size', '0.8rem').style('color', 'var(--color-text-muted)')
-        .text(`${d.gender || 'other'} ${(d.count/total*100).toFixed(1)}%`);
+        .text(`${getGenderLabel(d.gender)} ${(d.count / total * 100).toFixed(1)}%`);
     });
   }
 
@@ -84,12 +118,13 @@
       .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
       .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const genders = [...new Set(bdata.map(d => d.gender))];
-    const decades = [...new Set(bdata.map(d => d.decade))].sort((a,b) => a-b);
+    const genders = [...new Set(bdata.map(d => getGenderLabel(d.gender)))]
+      .sort((a, b) => genderOrder.indexOf(a) - genderOrder.indexOf(b));
+    const decades = [...new Set(bdata.map(d => d.decade))].sort((a, b) => a - b);
     const pivoted = decades.map(dec => {
       const row = { decade: dec };
       genders.forEach(g => {
-        const m = bdata.find(d => d.decade === dec && d.gender === g);
+        const m = bdata.find(d => d.decade === dec && getGenderLabel(d.gender) === g);
         row[g] = m ? m.count : 0;
       });
       return row;
@@ -105,12 +140,11 @@
       .y0(d => y(d[0])).y1(d => y(d[1]))
       .curve(d3.curveMonotoneX);
 
-    // Gradient fills
     const defs = svg.append('defs');
     genders.forEach((g, i) => {
       const grad = defs.append('linearGradient').attr('id', `grad-${i}`).attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', 1);
-      grad.append('stop').attr('offset', '0%').attr('stop-color', genderColorHex[g] || '#999').attr('stop-opacity', 0.8);
-      grad.append('stop').attr('offset', '100%').attr('stop-color', genderColorHex[g] || '#999').attr('stop-opacity', 0.4);
+      grad.append('stop').attr('offset', '0%').attr('stop-color', getGenderColor(g)).attr('stop-opacity', 0.8);
+      grad.append('stop').attr('offset', '100%').attr('stop-color', getGenderColor(g)).attr('stop-opacity', 0.4);
     });
 
     svg.selectAll('.area')

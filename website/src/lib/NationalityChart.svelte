@@ -8,14 +8,11 @@
 
   const palette = ['#c1440e','#2c5f7c','#8b6914','#6a9e5f','#9b59b6','#e67e22','#1abc9c','#e74c3c','#3498db','#2ecc71','#f39c12','#8e44ad','#16a085','#d35400','#2980b9'];
 
-  function inRange(decade) {
-    if (!selectedDecade) return true;
-    return decade >= selectedDecade.min && decade <= selectedDecade.max;
-  }
-
   let filteredData = $derived.by(() => {
-    if (!selectedDecade) return data;
-    const filtered = byDecade.filter(d => inRange(d.decade));
+    const range = selectedDecade;
+    if (!range) return data;
+
+    const filtered = byDecade.filter(d => d.decade >= range.min && d.decade <= range.max);
     if (!filtered.length) return data;
     const map = {};
     filtered.forEach(d => { map[d.nationality] = (map[d.nationality] || 0) + d.count; });
@@ -23,8 +20,28 @@
       .sort((a, b) => b.count - a.count);
   });
 
-  $effect(() => { if (barEl && filteredData.length) drawBar(filteredData.slice(0, 12)); });
-  $effect(() => { if (bumpEl && byDecade.length) drawBump(byDecade); });
+  let rangeKey = $derived(selectedDecade ? `${selectedDecade.min}-${selectedDecade.max}` : 'all');
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!barEl) return;
+    const topData = filteredData.slice(0, 12);
+    if (!topData.length) {
+      d3.select(barEl).selectAll('*').remove();
+      return;
+    }
+    drawBar(topData);
+  });
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!bumpEl) return;
+    if (!byDecade.length) {
+      d3.select(bumpEl).selectAll('*').remove();
+      return;
+    }
+    drawBump(byDecade);
+  });
 
   function drawBar(bdata) {
     const el = d3.select(barEl);

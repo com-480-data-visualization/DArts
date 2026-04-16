@@ -7,14 +7,11 @@
 
   const palette = ['#c1440e', '#2c5f7c', '#8b6914', '#6a9e5f', '#9b59b6', '#e67e22', '#1abc9c', '#34495e'];
 
-  function inRange(decade) {
-    if (!selectedDecade) return true;
-    return decade >= selectedDecade.min && decade <= selectedDecade.max;
-  }
-
   let filteredData = $derived.by(() => {
-    if (!selectedDecade) return data;
-    const filtered = byDecade.filter(d => inRange(d.decade));
+    const range = selectedDecade;
+    if (!range) return data;
+
+    const filtered = byDecade.filter(d => d.decade >= range.min && d.decade <= range.max);
     if (!filtered.length) return data;
     const map = {};
     filtered.forEach(d => { map[d.department] = (map[d.department] || 0) + d.count; });
@@ -22,7 +19,17 @@
       .sort((a, b) => b.count - a.count);
   });
 
-  $effect(() => { if (chartEl && filteredData.length) drawChart(filteredData); });
+  let rangeKey = $derived(selectedDecade ? `${selectedDecade.min}-${selectedDecade.max}` : 'all');
+
+  $effect(() => {
+    const _ = rangeKey;
+    if (!chartEl) return;
+    if (!filteredData.length) {
+      d3.select(chartEl).selectAll('*').remove();
+      return;
+    }
+    drawChart(filteredData);
+  });
 
   function drawChart(cdata) {
     const el = d3.select(chartEl);

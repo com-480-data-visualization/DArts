@@ -1,18 +1,58 @@
 """Pre-process MoMA data into compact JSON files for the web app."""
 
-import pandas as pd
 import json
 import os
 import random
+import re
+
+import pandas as pd
 
 random.seed(42)
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'website', 'public', 'data')
+BASE_DIR = os.path.dirname(__file__)
+RAW_DATA_DIR = os.path.join(BASE_DIR, 'moma-collection')
+OUTPUT_DIR = os.path.join(BASE_DIR, '..', 'website', 'public', 'data')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+
+def split_multi_value(value):
+    if pd.isna(value):
+        return []
+
+    text = str(value).strip()
+    if not text:
+        return []
+
+    parts = re.split(r'\)\s*\(', text)
+    values = [part.strip("() ").strip() for part in parts]
+    return [value for value in values if value]
+
+
+def normalize_gender_label(value):
+    if value is None or pd.isna(value):
+        return None
+
+    token = str(value).strip().lower()
+    if not token:
+        return None
+    if 'transgender woman' in token or 'transwoman' in token:
+        return 'female'
+    if 'female' in token:
+        return 'female'
+    if re.search(r'\bmale\b', token):
+        return 'male'
+    return 'other'
+
+
+def normalize_gender_list(value):
+    genders = [normalize_gender_label(part) for part in split_multi_value(value)]
+    normalized = [gender for gender in genders if gender]
+    return normalized or ['other']
+
+
 # Load raw data
-artworks = pd.read_csv('moma-collection/Artworks.csv')
-artists = pd.read_csv('moma-collection/Artists.csv')
+artworks = pd.read_csv(os.path.join(RAW_DATA_DIR, 'Artworks.csv'))
+artists = pd.read_csv(os.path.join(RAW_DATA_DIR, 'Artists.csv'))
 
 # Clean artists
 artists = artists.drop(columns=['Wiki QID', 'ULAN'])
@@ -44,8 +84,13 @@ artworks_clean = artworks_clean[(artworks_clean['Decade'] >= 1860) & (artworks_c
 artworks_clean['Nationality'] = artworks_clean['Nationality'].str.strip('()')
 artists_clean = artists_clean.copy()
 artists_clean['Nationality'] = artists_clean['Nationality'].str.strip('()')
-artworks_clean['Gender'] = artworks_clean['Gender'].str.strip('()')
-artists_clean['Gender'] = artists_clean['Gender'].str.strip('()')
+artists_clean['Gender'] = artists_clean['Gender'].apply(normalize_gender_label).fillna('other')
+
+# Expand artwork gender credits so time filtering doesn't collapse multi-artist rows
+artwork_gender_credits = artworks_clean[['Decade', 'Gender']].copy()
+artwork_gender_credits['gender'] = artwork_gender_credits['Gender'].apply(normalize_gender_list)
+artwork_gender_credits = artwork_gender_credits.explode('gender')
+artwork_gender_credits = artwork_gender_credits.dropna(subset=['gender'])
 
 
 # === Nationality to ISO country code mapping (for globe) ===
@@ -80,14 +125,14 @@ NATIONALITY_TO_ISO = {
 }
 
 
-# === 1. Gender distribution (artists) ===
-gender = artists_clean['Gender'].value_counts().reset_index()
+# === 1. Gender distribution (artwork artist credits) ===
+gender = artwork_gender_credits['gender'].value_counts().reset_index()
 gender.columns = ['gender', 'count']
 gender.to_json(os.path.join(OUTPUT_DIR, 'gender.json'), orient='records')
 
 
-# === 2. Gender by decade (artworks) ===
-gender_decade = artworks_clean.groupby(['Decade', 'Gender']).size().reset_index(name='count')
+# === 2. Gender by decade (artwork artist credits) ===
+gender_decade = artwork_gender_credits.groupby(['Decade', 'gender']).size().reset_index(name='count')
 gender_decade.columns = ['decade', 'gender', 'count']
 gender_decade.to_json(os.path.join(OUTPUT_DIR, 'gender_by_decade.json'), orient='records')
 
@@ -160,7 +205,7 @@ for nat_name, iso in NATIONALITY_TO_ISO.items():
                 'title': row['Title'],
                 'date': row['Date'],
                 'medium': row['Medium'],
-                'gender': row['Gender'],
+                'gender': ', '.join(dict.fromkeys(normalize_gender_list(row['Gender']))),
             })
 
 with open(os.path.join(OUTPUT_DIR, 'globe_artists.json'), 'w') as f:
