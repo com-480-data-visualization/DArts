@@ -101,7 +101,7 @@ Implementation plan:
 Prototype and sketches:
 - Prototype: [https://com-480-data-visualization.github.io/DArts/](https://com-480-data-visualization.github.io/DArts/)
 - Current site already includes the main skeleton, decade slider, globe, and core charts
-- Sketches for Scenes 1 to 5 are referenced in [Data_Visualization___Milestone_2.pdf](Data_Visualization___Milestone_2.pdf)
+- Sketches for Scenes 1 to 5 are referenced in [Milestone_2.pdf](Data_Visualization___Milestone_2.pdf)
 
 
 ## Milestone 3 (29th May, 5pm)
