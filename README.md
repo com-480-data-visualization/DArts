@@ -81,6 +81,28 @@ We are taking inspiration from a previous project by one of our team members, fo
 
 **10% of the final grade**
 
+We aim to visualize diversity in the MoMA collection through an interactive, scroll-driven website. The project focuses on how representation varies by gender, nationality, medium, and decade, while helping users discover underrepresented artists.
+
+Planned narrative:
+- Scene 1: medium grid showing the overall composition of the collection
+- Scene 2: interactive globe showing artist origins and their evolution over time
+- Scene 3: gender trends by decade and by curatorial department
+- Scene 4: open explorer comparing media and departments with filters
+- Scene 5: short quiz matching users to an underrepresented artist
+
+Tools and lectures:
+- `Svelte`, `D3.js`, `HTML/CSS/JS`, `Python/pandas`, `TopoJSON`, `Vite`, `Figma`
+- Lectures: `Data`, `D3.js`, `Interactions`, `Maps`, `Perception & Colors`
+
+Implementation plan:
+- MVP: preprocess the data, build the website skeleton, add a shared decade slider, implement the globe and core charts, and deploy a working prototype
+- Extra ideas: richer scroll transitions, artist-matching quiz, visitor-sentiment analysis, and an alternative pictograph for Scene 4
+
+Prototype and sketches:
+- Prototype: [https://com-480-data-visualization.github.io/DArts/](https://com-480-data-visualization.github.io/DArts/)
+- Current site already includes the main skeleton, decade slider, globe, and core charts
+- Sketches for Scenes 1 to 5 are referenced in [Data_Visualization___Milestone_2.pdf](Data_Visualization___Milestone_2.pdf)
+
 
 ## Milestone 3 (29th May, 5pm)
 
