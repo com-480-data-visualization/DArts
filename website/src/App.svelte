@@ -14,6 +14,7 @@
   import Scene2Globe from './lib/scenes/Scene2Globe.svelte';
   import Scene3Gender from './lib/scenes/Scene3Gender.svelte';
   import Scene4Explorer from './lib/scenes/Scene4Explorer.svelte';
+  import Scene5Quiz from './lib/scenes/Scene5Quiz.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
@@ -87,6 +88,7 @@
     timeline={timelineData}
   />
   <Scene4Explorer data={mediumBreakdown} {countrySummary} timeline={timelineData} />
+  <Scene5Quiz />
 
   <div class="section">
     <DecadeSlider {timelineData} bind:selectedDecade />
