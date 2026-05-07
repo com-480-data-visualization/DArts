@@ -63,4 +63,10 @@
   figcaption strong {
     color: var(--fg-on-dark-strong);
   }
+
+  @media (max-width: 480px) {
+    .row {
+      grid-template-columns: minmax(4rem, 6rem) 1fr 3rem;
+    }
+  }
 </style>

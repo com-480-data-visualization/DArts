@@ -112,6 +112,7 @@
 <style>
   .scene-quiz {
     min-height: 100vh;
+    min-height: 100svh;
     display: grid;
     place-items: center;
     padding: var(--space-4);

@@ -123,6 +123,7 @@
   .hero-scene {
     position: relative;
     min-height: 100vh;
+    min-height: 100svh;
     overflow: hidden;
     display: grid;
     place-items: center;

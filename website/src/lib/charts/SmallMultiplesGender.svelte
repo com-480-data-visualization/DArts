@@ -100,4 +100,14 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+
+  @media (max-width: 560px) {
+    .multiples {
+      grid-template-columns: 1fr;
+    }
+
+    h3 {
+      min-height: auto;
+    }
+  }
 </style>

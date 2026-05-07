@@ -90,6 +90,7 @@
     position: sticky;
     top: 0;
     min-height: 100vh;
+    min-height: 100svh;
     display: grid;
     grid-template-columns: var(--rail-width) minmax(0, 1fr);
     gap: var(--space-4);
@@ -221,13 +222,29 @@
   }
 
   @media (max-width: 900px) {
+    .scene-globe {
+      min-height: auto;
+    }
+
     .globe-stage {
+      position: relative;
       grid-template-columns: 1fr;
       align-content: start;
+      min-height: auto;
+      padding: var(--space-2);
     }
 
     .globe-copy {
       max-height: none;
+    }
+
+    .steps :global(.scroll-step) {
+      min-height: auto;
+      margin-bottom: var(--space-2);
+    }
+
+    .globe-wrap {
+      min-height: 22rem;
     }
 
     .country-panel {
