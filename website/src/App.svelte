@@ -7,6 +7,8 @@
   import NationalityChart from './lib/NationalityChart.svelte';
   import TimelineChart from './lib/TimelineChart.svelte';
   import DepartmentChart from './lib/DepartmentChart.svelte';
+  import FilterStoreDebug from './lib/components/FilterStoreDebug.svelte';
+  import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
   let genderData = $state([]);
@@ -19,22 +21,37 @@
   let globeCountries = $state([]);
   let globeArtists = $state([]);
   let selectedDecade = $state(null);
+  let showFilterDebug = $state(false);
 
-  onMount(async () => {
+  onMount(() => {
+    const stopHashSync = initFilterHashSync();
+    showFilterDebug = import.meta.env.DEV && window.location.pathname.endsWith('/filters');
+    let cancelled = false;
     const files = [
       'summary', 'gender', 'gender_by_decade',
       'nationality', 'nationality_by_decade',
       'department', 'department_by_decade', 'timeline',
       'globe_countries', 'globe_artists'
     ];
-    const results = await Promise.all(
-      files.map(f => fetch(`./data/${f}.json`).then(r => r.json()))
-    );
-    [summary, genderData, genderByDecade, nationalityData,
-     nationalityByDecade, departmentData, departmentByDecade,
-     timelineData, globeCountries, globeArtists] = results;
+
+    Promise.all(files.map(f => fetch(`./data/${f}.json`).then(r => r.json())))
+      .then((results) => {
+        if (cancelled) return;
+        [summary, genderData, genderByDecade, nationalityData,
+         nationalityByDecade, departmentData, departmentByDecade,
+         timelineData, globeCountries, globeArtists] = results;
+      });
+
+    return () => {
+      cancelled = true;
+      stopHashSync();
+    };
   });
 </script>
+
+{#if showFilterDebug}
+  <FilterStoreDebug />
+{/if}
 
 {#if summary}
   <Hero {summary} />
