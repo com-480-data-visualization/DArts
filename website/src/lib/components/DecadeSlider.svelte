@@ -227,7 +227,9 @@
     bottom: calc(100% + 0.25rem);
     left: 50%;
     translate: -50% 0;
-    color: var(--accent-primary);
+    padding: 0 0.125rem;
+    color: var(--fg-on-light-strong);
+    background: var(--bg-paper);
     font-family: var(--font-mono);
     font-size: var(--type-small-size);
     font-variant-numeric: tabular-nums;

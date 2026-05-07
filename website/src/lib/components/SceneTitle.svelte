@@ -27,7 +27,7 @@
 
   .kicker {
     margin: 0 0 var(--space-1);
-    color: var(--accent-primary);
+    color: var(--fg-on-light-strong);
     font-family: var(--font-ui);
     font-size: var(--type-small-size);
     font-weight: 600;
@@ -54,5 +54,9 @@
 
   .dark .subline {
     color: var(--fg-on-dark-mute);
+  }
+
+  .dark .kicker {
+    color: var(--fg-on-dark-strong);
   }
 </style>

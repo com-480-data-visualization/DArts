@@ -35,7 +35,8 @@
 </script>
 
 <figure class="line-chart" aria-label="Female-credited share by decade from 1860 to 2020">
-  <svg viewBox={`0 0 ${width} ${height}`} role="img">
+  <svg viewBox={`0 0 ${width} ${height}`}>
+    <title>Female-credited share by decade</title>
     <g transform={`translate(${margin.left},${margin.top})`}>
       <g class="grid">
         {#each [0, 0.25, 0.5, 0.6] as tick}

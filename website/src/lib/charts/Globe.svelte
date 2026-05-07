@@ -134,7 +134,8 @@
 </script>
 
 <figure class="globe-figure" aria-label="Orthographic globe showing credited works by artist country">
-  <svg viewBox={`0 0 ${width} ${height}`} role="img">
+  <svg viewBox={`0 0 ${width} ${height}`}>
+    <title>Orthographic globe of credited works by artist country</title>
     <defs>
       <filter id="globe-rim" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />

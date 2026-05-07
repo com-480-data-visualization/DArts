@@ -39,7 +39,8 @@
 </script>
 
 <figure class="treemap" aria-label="Treemap of MoMA collection areas by number of works">
-  <svg viewBox={`0 0 ${width} ${height}`} role="img">
+  <svg viewBox={`0 0 ${width} ${height}`}>
+    <title>Treemap of MoMA collection areas by number of works</title>
     {#each leaves as leaf}
       {@const leafWidth = leaf.x1 - leaf.x0}
       {@const leafHeight = leaf.y1 - leaf.y0}

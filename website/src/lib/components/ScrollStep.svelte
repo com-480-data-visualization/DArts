@@ -34,12 +34,13 @@
     min-height: 70vh;
     display: flex;
     align-items: center;
-    opacity: 0.48;
-    transition: opacity var(--duration-state) var(--ease-out);
+    border-left: 2px solid transparent;
+    padding-left: var(--space-2);
+    transition: border-color var(--duration-state) var(--ease-out);
   }
 
   .scroll-step.is-active {
-    opacity: 1;
+    border-color: var(--accent-primary);
   }
 
   @media (prefers-reduced-motion: reduce) {
