@@ -7,7 +7,9 @@
   import NationalityChart from './lib/NationalityChart.svelte';
   import TimelineChart from './lib/TimelineChart.svelte';
   import DepartmentChart from './lib/DepartmentChart.svelte';
+  import ComponentDemo from './lib/components/ComponentDemo.svelte';
   import FilterStoreDebug from './lib/components/FilterStoreDebug.svelte';
+  import Tooltip from './lib/components/Tooltip.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
@@ -22,10 +24,12 @@
   let globeArtists = $state([]);
   let selectedDecade = $state(null);
   let showFilterDebug = $state(false);
+  let showComponentDemo = $state(false);
 
   onMount(() => {
     const stopHashSync = initFilterHashSync();
     showFilterDebug = import.meta.env.DEV && window.location.pathname.endsWith('/filters');
+    showComponentDemo = import.meta.env.DEV && window.location.pathname.endsWith('/components');
     let cancelled = false;
     const files = [
       'summary', 'gender', 'gender_by_decade',
@@ -49,11 +53,15 @@
   });
 </script>
 
+<Tooltip />
+
 {#if showFilterDebug}
   <FilterStoreDebug />
 {/if}
 
-{#if summary}
+{#if showComponentDemo}
+  <ComponentDemo />
+{:else if summary}
   <Hero {summary} />
 
   <div class="section">
