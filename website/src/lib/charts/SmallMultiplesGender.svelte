@@ -6,9 +6,15 @@
   const width = 210;
   const height = 120;
   const margin = { top: 18, right: 10, bottom: 18, left: 28 };
-  const x = scaleLinear().domain([1860, 2020]).range([margin.left, width - margin.right]);
-  const y = scaleLinear().domain([0, 0.6]).range([height - margin.bottom, margin.top]);
-  const pathFor = line().x((d) => x(d.decade)).y((d) => y(d.femaleShare));
+  const x = scaleLinear()
+    .domain([1860, 2020])
+    .range([margin.left, width - margin.right]);
+  const y = scaleLinear()
+    .domain([0, 0.6])
+    .range([height - margin.bottom, margin.top]);
+  const pathFor = line()
+    .x((d) => x(d.decade))
+    .y((d) => y(d.femaleShare));
 
   $: panels = buildPanels(data);
 
@@ -26,11 +32,13 @@
     }
     return [...grouped.entries()]
       .map(([department, values]) => {
-        const series = [...values.values()].sort((a, b) => a.decade - b.decade).map((d) => ({
-          decade: d.decade,
-          femaleShare: d.total ? d.female / d.total : 0,
-          n: d.total,
-        }));
+        const series = [...values.values()]
+          .sort((a, b) => a.decade - b.decade)
+          .map((d) => ({
+            decade: d.decade,
+            femaleShare: d.total ? d.female / d.total : 0,
+            n: d.total,
+          }));
         const final = [...series].reverse().find((d) => d.n > 0) ?? { femaleShare: 0, n: 0 };
         return { department, series, finalShare: final.femaleShare, finalN: final.n };
       })

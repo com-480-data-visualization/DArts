@@ -72,13 +72,15 @@
   }
 
   function showTooltip(event, segment, total) {
-    window.dispatchEvent(new CustomEvent('darts:tooltip', {
-      detail: {
-        x: event.clientX,
-        y: event.clientY,
-        content: `<strong>${segment.label}</strong><br><span class="num">${segment.n.toLocaleString()}</span> works<br><span class="num">${(segment.n / total * 100).toFixed(1)}%</span> of medium`
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('darts:tooltip', {
+        detail: {
+          x: event.clientX,
+          y: event.clientY,
+          content: `<strong>${segment.label}</strong><br><span class="num">${segment.n.toLocaleString()}</span> works<br><span class="num">${((segment.n / total) * 100).toFixed(1)}%</span> of medium`,
+        },
+      }),
+    );
   }
 
   function hideTooltip() {
@@ -117,8 +119,17 @@
 {:else}
   <div class="medium-grid" class:has-expanded={expanded}>
     {#each panels as panel (panel.medium)}
-      <article class:expanded={expanded === panel.medium} class:dimmed={expanded && expanded !== panel.medium} animate:flip={{ duration: 450 }}>
-        <button type="button" class="panel-button" onclick={() => expand(panel.medium)} aria-expanded={expanded === panel.medium}>
+      <article
+        class:expanded={expanded === panel.medium}
+        class:dimmed={expanded && expanded !== panel.medium}
+        animate:flip={{ duration: 450 }}
+      >
+        <button
+          type="button"
+          class="panel-button"
+          onclick={() => expand(panel.medium)}
+          aria-expanded={expanded === panel.medium}
+        >
           <header>
             <h3>{panel.medium}</h3>
             <p class="type-mono">n={panel.total.toLocaleString()}</p>
@@ -164,7 +175,9 @@
               {#each topArtists(panel.medium) as artist}
                 <div class="artist-row">
                   <span>{artist.name}</span>
-                  <b style:width={`${Math.min(100, artist.n_works / Math.max(1, topArtists(panel.medium)[0]?.n_works) * 100)}%`}></b>
+                  <b
+                    style:width={`${Math.min(100, (artist.n_works / Math.max(1, topArtists(panel.medium)[0]?.n_works)) * 100)}%`}
+                  ></b>
                   <em class="type-mono">{artist.n_works}</em>
                 </div>
               {/each}

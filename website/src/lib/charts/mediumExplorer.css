@@ -7,7 +7,9 @@
 .medium-grid article {
   background: var(--bg-paper);
   border: 1px solid var(--rule-on-light);
-  transition: opacity var(--duration-state) var(--ease-out), scale var(--duration-state) var(--ease-out);
+  transition:
+    opacity var(--duration-state) var(--ease-out),
+    scale var(--duration-state) var(--ease-out);
 }
 
 .medium-grid article.dimmed {

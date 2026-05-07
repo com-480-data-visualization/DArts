@@ -16,17 +16,21 @@
   $: range = $filters.decadeRange;
   $: x = scaleLinear().domain([1860, 2020]).range([0, innerWidth]);
   $: y = scaleLinear().domain([0, 0.6]).range([innerHeight, 0]);
-  $: pathD = line().x((d) => x(d.decade)).y((d) => y(d.femaleShare))(data);
+  $: pathD = line()
+    .x((d) => x(d.decade))
+    .y((d) => y(d.femaleShare))(data);
   $: areaD = `${pathD || ''} L ${x(data.at(-1)?.decade ?? 2020)} ${innerHeight} L ${x(data[0]?.decade ?? 1860)} ${innerHeight} Z`;
 
   function showTooltip(event, d) {
-    window.dispatchEvent(new CustomEvent('darts:tooltip', {
-      detail: {
-        x: event.clientX,
-        y: event.clientY,
-        content: `<strong>${d.decade}s</strong><br><span class="num">${(d.femaleShare * 100).toFixed(1)}%</span> female-credited<br><span class="num">n=${d.n.toLocaleString()}</span>${d.n < 30 ? '<br>small sample' : ''}`
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('darts:tooltip', {
+        detail: {
+          x: event.clientX,
+          y: event.clientY,
+          content: `<strong>${d.decade}s</strong><br><span class="num">${(d.femaleShare * 100).toFixed(1)}%</span> female-credited<br><span class="num">n=${d.n.toLocaleString()}</span>${d.n < 30 ? '<br>small sample' : ''}`,
+        },
+      }),
+    );
   }
 
   function hideTooltip() {
@@ -46,7 +50,13 @@
       </g>
       <line class="parity" x1="0" x2={innerWidth} y1={y(0.5)} y2={y(0.5)} />
       <text class="parity-label" x={innerWidth - 48} y={y(0.5) - 8}>parity</text>
-      <rect class="range-band" x={x(range[0])} y="0" width={Math.max(1, x(range[1]) - x(range[0]))} height={innerHeight} />
+      <rect
+        class="range-band"
+        x={x(range[0])}
+        y="0"
+        width={Math.max(1, x(range[1]) - x(range[0]))}
+        height={innerHeight}
+      />
       <path class="area" d={areaD} />
       <path class="series draw" d={pathD} />
       {#each data as d}

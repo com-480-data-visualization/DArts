@@ -46,14 +46,7 @@
   .ramp {
     width: min(18rem, 100%);
     height: 0.75rem;
-    background: linear-gradient(
-      90deg,
-      var(--seq-0),
-      var(--seq-1),
-      var(--seq-2),
-      var(--seq-3),
-      var(--seq-4)
-    );
+    background: linear-gradient(90deg, var(--seq-0), var(--seq-1), var(--seq-2), var(--seq-3), var(--seq-4));
   }
 
   .ramp-labels {

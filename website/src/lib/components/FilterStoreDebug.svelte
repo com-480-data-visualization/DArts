@@ -12,14 +12,18 @@
 
 <aside class="filter-debug" aria-label="Filter store debug panel">
   <h2>Filter Store Debug</h2>
-  <pre>{JSON.stringify({
-    decadeRange: $filters.decadeRange,
-    selectedCountry: $filters.selectedCountry,
-    selectedDepartments: [...$filters.selectedDepartments],
-    selectedRegions: [...$filters.selectedRegions],
-    activeScene: $filters.activeScene,
-    activeStep: $filters.activeStep,
-  }, null, 2)}</pre>
+  <pre>{JSON.stringify(
+      {
+        decadeRange: $filters.decadeRange,
+        selectedCountry: $filters.selectedCountry,
+        selectedDepartments: [...$filters.selectedDepartments],
+        selectedRegions: [...$filters.selectedRegions],
+        activeScene: $filters.activeScene,
+        activeStep: $filters.activeStep,
+      },
+      null,
+      2,
+    )}</pre>
   <div class="debug-actions">
     <button type="button" onclick={() => setDecadeRange([1900, 1980])}>Set 1900-1980</button>
     <button type="button" onclick={() => setSelectedCountry('USA')}>Country USA</button>

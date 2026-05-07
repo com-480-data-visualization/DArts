@@ -1,11 +1,5 @@
 <script>
-  import {
-    clearSelectedCountry,
-    filters,
-    resetFilters,
-    toggleDepartment,
-    toggleRegion,
-  } from '../stores/filters.js';
+  import { clearSelectedCountry, filters, resetFilters, toggleDepartment, toggleRegion } from '../stores/filters.js';
   import DecadeSlider from '../components/DecadeSlider.svelte';
   import FilterChip from '../components/FilterChip.svelte';
   import Legend from '../components/Legend.svelte';
@@ -14,7 +8,16 @@
 
   let { data = [], countrySummary = [], timeline = [] } = $props();
 
-  const regions = ['North America', 'Latin America & Caribbean', 'Europe', 'Africa', 'Western & Central Asia', 'East Asia', 'South & Southeast Asia', 'Oceania'];
+  const regions = [
+    'North America',
+    'Latin America & Caribbean',
+    'Europe',
+    'Africa',
+    'Western & Central Asia',
+    'East Asia',
+    'South & Southeast Asia',
+    'Oceania',
+  ];
   const genderLegend = [
     { label: 'female', color: 'var(--gender-female)' },
     { label: 'male', color: 'var(--gender-male)' },
@@ -23,7 +26,9 @@
   ];
 
   let departments = $derived([...new Set(data.map((d) => d.department))].sort());
-  let countryName = $derived(countrySummary.find((d) => d.iso3 === $filters.selectedCountry)?.country_name ?? $filters.selectedCountry);
+  let countryName = $derived(
+    countrySummary.find((d) => d.iso3 === $filters.selectedCountry)?.country_name ?? $filters.selectedCountry,
+  );
 </script>
 
 <section class="scene-explorer" aria-labelledby="scene-4-title">
@@ -40,17 +45,15 @@
           <button
             type="button"
             class:active={$filters.selectedDepartments.has(department)}
-            onclick={() => toggleDepartment(department)}
-          >{department}</button>
+            onclick={() => toggleDepartment(department)}>{department}</button
+          >
         {/each}
       </div>
       <div class="chip-row">
         {#each regions as region}
-          <button
-            type="button"
-            class:active={$filters.selectedRegions.has(region)}
-            onclick={() => toggleRegion(region)}
-          >{region}</button>
+          <button type="button" class:active={$filters.selectedRegions.has(region)} onclick={() => toggleRegion(region)}
+            >{region}</button
+          >
         {/each}
       </div>
       <div class="applied">

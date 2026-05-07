@@ -26,6 +26,8 @@ ENV/
 .idea/
 *.swp
 *.swo
+.chrome-profile/
+lighthouse*.json
 
 # Node
 node_modules/

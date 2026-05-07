@@ -48,20 +48,34 @@
         </div>
       {/if}
       <Treemap {data} {highlighted} {annotation} {lockedMedium} onLock={(medium) => (lockedMedium = medium)} />
-      <p class="source">Source: MoMA Collection. n = {data.reduce((sum, d) => sum + d.n, 0).toLocaleString()} cleaned works.</p>
+      <p class="source">
+        Source: MoMA Collection. n = {data.reduce((sum, d) => sum + d.n, 0).toLocaleString()} cleaned works.
+      </p>
     </div>
     <div class="text-rail">
       <ScrollStep scene={1} step={0}>
-        <p>Start with the whole collection. The first surprise is not geography or gender; it is the shape of the archive itself.</p>
+        <p>
+          Start with the whole collection. The first surprise is not geography or gender; it is the shape of the archive
+          itself.
+        </p>
       </ScrollStep>
       <ScrollStep scene={1} step={1}>
-        <p>Drawings & Prints dominates the count. The familiar museum visit is only one view into a much larger paper collection.</p>
+        <p>
+          Drawings & Prints dominates the count. The familiar museum visit is only one view into a much larger paper
+          collection.
+        </p>
       </ScrollStep>
       <ScrollStep scene={1} step={2}>
-        <p>Photography and Architecture & Design account for most of the remaining volume, reinforcing how much of MoMA is reproducible, archival, or design-oriented.</p>
+        <p>
+          Photography and Architecture & Design account for most of the remaining volume, reinforcing how much of MoMA
+          is reproducible, archival, or design-oriented.
+        </p>
       </ScrollStep>
       <ScrollStep scene={1} step={3}>
-        <p>Painting & Sculpture is culturally central, but numerically small. That imbalance matters before we ask who is represented.</p>
+        <p>
+          Painting & Sculpture is culturally central, but numerically small. That imbalance matters before we ask who is
+          represented.
+        </p>
       </ScrollStep>
     </div>
   </div>

@@ -3,6 +3,7 @@
   import { geoCentroid, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo';
   import { interpolate } from 'd3-interpolate';
   import { feature } from 'topojson-client';
+  import { worldAtlasIdToIso3 } from '../data/worldIso3.js';
   import { filters, setSelectedCountry } from '../stores/filters.js';
 
   let { countryByDecade = [], step = 0 } = $props();
@@ -10,23 +11,6 @@
   const width = 760;
   const height = 760;
   const topThree = new Set(['USA', 'FRA', 'DEU']);
-  const idToIso3 = {
-    '004': 'AFG', '008': 'ALB', '012': 'DZA', '031': 'AZE', '032': 'ARG', '036': 'AUS', '040': 'AUT', '044': 'BHS',
-    '050': 'BGD', '056': 'BEL', '068': 'BOL', '070': 'BIH', '076': 'BRA', '100': 'BGR', '116': 'KHM', '120': 'CMR',
-    '124': 'CAN', '140': 'CAF', '144': 'LKA', '152': 'CHL', '156': 'CHN', '158': 'TWN', '170': 'COL', '180': 'COD',
-    '188': 'CRI', '191': 'HRV', '192': 'CUB', '196': 'CYP', '203': 'CZE', '204': 'BEN', '208': 'DNK', '218': 'ECU',
-    '222': 'SLV', '231': 'ETH', '233': 'EST', '242': 'FJI', '246': 'FIN', '250': 'FRA', '268': 'GEO', '275': 'PSE',
-    '276': 'DEU', '288': 'GHA', '300': 'GRC', '320': 'GTM', '332': 'HTI', '348': 'HUN', '352': 'ISL', '356': 'IND',
-    '360': 'IDN', '364': 'IRN', '368': 'IRQ', '372': 'IRL', '376': 'ISR', '380': 'ITA', '384': 'CIV', '388': 'JAM',
-    '392': 'JPN', '404': 'KEN', '410': 'KOR', '414': 'KWT', '417': 'KGZ', '422': 'LBN', '428': 'LVA', '440': 'LTU',
-    '442': 'LUX', '458': 'MYS', '466': 'MLI', '484': 'MEX', '504': 'MAR', '508': 'MOZ', '516': 'NAM', '524': 'NPL',
-    '528': 'NLD', '554': 'NZL', '558': 'NIC', '566': 'NGA', '578': 'NOR', '586': 'PAK', '591': 'PAN', '600': 'PRY',
-    '604': 'PER', '608': 'PHL', '616': 'POL', '620': 'PRT', '630': 'PRI', '642': 'ROU', '643': 'RUS', '686': 'SEN',
-    '688': 'SRB', '694': 'SLE', '702': 'SGP', '703': 'SVK', '704': 'VNM', '705': 'SVN', '710': 'ZAF', '716': 'ZWE',
-    '724': 'ESP', '729': 'SDN', '752': 'SWE', '756': 'CHE', '760': 'SYR', '764': 'THA', '780': 'TTO', '784': 'ARE',
-    '788': 'TUN', '792': 'TUR', '800': 'UGA', '804': 'UKR', '807': 'MKD', '818': 'EGY', '826': 'GBR', '834': 'TZA',
-    '840': 'USA', '854': 'BFA', '858': 'URY', '860': 'UZB', '862': 'VEN'
-  };
 
   let countries = $state([]);
   let rotation = $state([-35, -20]);
@@ -36,7 +20,13 @@
   let frame = 0;
   let reduceMotion = false;
 
-  let projection = $derived(geoOrthographic().scale(350).translate([width / 2, height / 2]).clipAngle(90).rotate(rotation));
+  let projection = $derived(
+    geoOrthographic()
+      .scale(350)
+      .translate([width / 2, height / 2])
+      .clipAngle(90)
+      .rotate(rotation),
+  );
   let path = $derived(geoPath(projection));
   let graticulePath = $derived(path(geoGraticule10()));
   let range = $derived($filters.decadeRange);
@@ -63,16 +53,18 @@
   }
 
   function showTooltip(event, country) {
-    const iso3 = idToIso3[String(country.id).padStart(3, '0')];
+    const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')];
     const count = countByIso[iso3] || 0;
     if (!iso3 || count === 0) return;
-    window.dispatchEvent(new CustomEvent('darts:tooltip', {
-      detail: {
-        x: event.clientX,
-        y: event.clientY,
-        content: `<strong>${country.properties.name}</strong><br><span class="num">${count.toLocaleString()}</span> credited works`
-      }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('darts:tooltip', {
+        detail: {
+          x: event.clientX,
+          y: event.clientY,
+          content: `<strong>${country.properties.name}</strong><br><span class="num">${count.toLocaleString()}</span> credited works`,
+        },
+      }),
+    );
   }
 
   function hideTooltip() {
@@ -84,7 +76,7 @@
   }
 
   function centerCountry(country) {
-    const iso3 = idToIso3[String(country.id).padStart(3, '0')];
+    const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')];
     if (!iso3 || !countByIso[iso3]) return;
     setSelectedCountry(iso3);
     const [lon, lat] = geoCentroid(country);
@@ -159,7 +151,7 @@
       onpointercancel={onPointerUp}
     >
       {#each countries as country}
-        {@const iso3 = idToIso3[String(country.id).padStart(3, '0')]}
+        {@const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')]}
         <path
           d={path(country)}
           fill={fillFor(iso3)}
@@ -222,7 +214,9 @@
   path {
     stroke: var(--bg-dark);
     stroke-width: 0.35;
-    transition: fill 450ms var(--ease-inout), stroke 180ms var(--ease-out);
+    transition:
+      fill 450ms var(--ease-inout),
+      stroke 180ms var(--ease-out);
   }
 
   path.clickable {

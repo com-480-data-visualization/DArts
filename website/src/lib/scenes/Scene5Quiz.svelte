@@ -11,7 +11,16 @@
     ['1990s-2000s', [1990, 2000]],
     ['2010s-now', [2010, 2020]],
   ];
-  const regions = ['North America', 'Latin America & Caribbean', 'Europe', 'Africa', 'Western & Central Asia', 'East Asia', 'South & Southeast Asia', 'Oceania'];
+  const regions = [
+    'North America',
+    'Latin America & Caribbean',
+    'Europe',
+    'Africa',
+    'Western & Central Asia',
+    'East Asia',
+    'South & Southeast Asia',
+    'Oceania',
+  ];
   const mediums = ['Photography', 'Drawing', 'Sculpture', 'Painting', 'Film/Video', 'Design'];
 
   let stage = $state(0);
@@ -97,12 +106,21 @@
           <p class="note">No exact match. Showing closest fit.</p>
         {/if}
         <h3>{result.artist.name}</h3>
-        <p>{result.artist.nationality ?? 'nationality unknown'} &middot; {result.artist.gender} &middot; {lifespan(result.artist)}</p>
-        <p><em>{result.artist.sample_work_title}</em>{#if result.artist.sample_work_year}, {result.artist.sample_work_year}{/if} &middot; {result.artist.medium_primary}</p>
+        <p>
+          {result.artist.nationality ?? 'nationality unknown'} &middot; {result.artist.gender} &middot; {lifespan(
+            result.artist,
+          )}
+        </p>
+        <p>
+          <em>{result.artist.sample_work_title}</em>{#if result.artist.sample_work_year}, {result.artist
+              .sample_work_year}{/if} &middot; {result.artist.medium_primary}
+        </p>
         <AnchorBar artistName={result.artist.name} artistCount={result.artist.n_works} />
         <div class="actions">
           <button type="button" onclick={reset}>Try again</button>
-          <a href={`https://www.moma.org/artists/${result.artist.artist_id}`} target="_blank" rel="noopener">Open on MoMA</a>
+          <a href={`https://www.moma.org/artists/${result.artist.artist_id}`} target="_blank" rel="noopener"
+            >Open on MoMA</a
+          >
         </div>
       </article>
     {/if}

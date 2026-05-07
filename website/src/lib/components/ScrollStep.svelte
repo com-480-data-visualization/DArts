@@ -19,13 +19,7 @@
   });
 </script>
 
-<div
-  bind:this={node}
-  class="scroll-step"
-  class:is-active={isActive}
-  data-scene={scene}
-  data-step={step}
->
+<div bind:this={node} class="scroll-step" class:is-active={isActive} data-scene={scene} data-step={step}>
   <slot />
 </div>
 

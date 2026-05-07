@@ -41,8 +41,8 @@
       'medium_breakdown',
     ];
 
-    Promise.all(files.map((file) => fetch(`./data/${file}.json`).then((response) => response.json())))
-      .then((results) => {
+    Promise.all(files.map((file) => fetch(`./data/${file}.json`).then((response) => response.json()))).then(
+      (results) => {
         if (cancelled) return;
         [
           summary,
@@ -55,7 +55,8 @@
           genderByDepartment,
           mediumBreakdown,
         ] = results;
-      });
+      },
+    );
 
     return () => {
       cancelled = true;
@@ -77,13 +78,7 @@
     <Scene0Hero {summary} />
     <Scene1Mediums data={mediumTotals} />
     <Scene2Globe {countryByDecade} {countrySummary} timeline={timelineData} />
-    <Scene3Gender
-      genderByDecade={genderByDecade}
-      genderByDepartment={genderByDepartment}
-      genderByCountry={genderByCountry}
-      {countrySummary}
-      timeline={timelineData}
-    />
+    <Scene3Gender {genderByDecade} {genderByDepartment} {genderByCountry} {countrySummary} timeline={timelineData} />
     <Scene4Explorer data={mediumBreakdown} {countrySummary} timeline={timelineData} />
     <Scene5Quiz />
   </main>

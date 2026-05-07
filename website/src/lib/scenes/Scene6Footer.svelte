@@ -18,7 +18,10 @@
     </div>
     <div class="wide">
       <p>Data: Museum of Modern Art Collection (CC0). github.com/MuseumofModernArt/collection.</p>
-      <p>This project analyzes the <em>recorded</em> MoMA collection. Demographic fields are limited to what MoMA records. Absence in the data is not a judgment of curatorial intent or of an artist's significance.</p>
+      <p>
+        This project analyzes the <em>recorded</em> MoMA collection. Demographic fields are limited to what MoMA records.
+        Absence in the data is not a judgment of curatorial intent or of an artist's significance.
+      </p>
     </div>
   </div>
 </footer>

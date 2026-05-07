@@ -24,10 +24,19 @@ function ranked(candidates) {
  */
 export function matchArtist(artists, answers) {
   const withWork = artists.filter((artist) => artist.n_works > 0 && artist.sample_work_title);
-  const exact = ranked(withWork.filter((artist) => overlaps(artist, answers.decadeRange) && artist.region === answers.region && artist.medium_primary === answers.medium));
+  const exact = ranked(
+    withWork.filter(
+      (artist) =>
+        overlaps(artist, answers.decadeRange) &&
+        artist.region === answers.region &&
+        artist.medium_primary === answers.medium,
+    ),
+  );
   if (exact.length) return { artist: exact[Math.min(2, exact.length - 1)], relaxed: null };
 
-  const dropRegion = ranked(withWork.filter((artist) => overlaps(artist, answers.decadeRange) && artist.medium_primary === answers.medium));
+  const dropRegion = ranked(
+    withWork.filter((artist) => overlaps(artist, answers.decadeRange) && artist.medium_primary === answers.medium),
+  );
   if (dropRegion.length) return { artist: dropRegion[Math.min(2, dropRegion.length - 1)], relaxed: 'region' };
 
   const dropMedium = ranked(withWork.filter((artist) => overlaps(artist, answers.decadeRange)));

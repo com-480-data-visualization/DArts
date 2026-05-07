@@ -6,12 +6,25 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "lint": "eslint src --max-warnings=0 && node scripts/lint-hard-rules.mjs",
+    "format:check": "prettier --check \"src/**/*.{js,svelte,css}\" \"*.js\"",
+    "depcheck": "depcheck --ignores=d3,topojson-client,@axe-core/cli,depcheck,prettier-plugin-svelte",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "prepare": "cd .. && husky"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.11.3",
+    "@eslint/js": "^10.0.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "depcheck": "^1.4.7",
+    "eslint": "^10.3.0",
+    "eslint-plugin-svelte": "^3.17.1",
     "gh-pages": "^6.3.0",
+    "globals": "^17.6.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.3",
+    "prettier-plugin-svelte": "^3.5.1",
     "svelte": "^5.25.3",
     "vite": "^6.3.1"
   },

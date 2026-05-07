@@ -43,7 +43,15 @@
     <h3>Annotation</h3>
     <svg viewBox="0 0 420 180" role="img" aria-label="Annotation component demo">
       <rect x="40" y="60" width="180" height="64" fill="var(--seq-1)" />
-      <Annotation x={180} y={92} dx={64} dy={-32} value="52%" label="of works sit in one collection area." emphasis="strong" />
+      <Annotation
+        x={180}
+        y={92}
+        dx={64}
+        dy={-32}
+        value="52%"
+        label="of works sit in one collection area."
+        emphasis="strong"
+      />
     </svg>
   </section>
 </main>

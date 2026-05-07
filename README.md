@@ -1,116 +1,115 @@
-# Project of Data Visualization (COM-480)
- 
-| Student's name | SCIPER |
-| -------------- | ------ |
-|Oussama Ghali|341478|
-|Nour Guermazi|314474|
-|Isabella Linde|423106|
- 
-[Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
- 
-## Milestone 1 (20th March, 5pm)
- 
-**10% of the final grade**
- 
-This is a preliminary milestone to let you set up goals for your final project and assess the feasibility of your ideas.
-Please, fill the following sections about your project.
- 
-*(max. 2000 characters per section)*
- 
-### Dataset
- 
-For this project, we will use the [Museum of Modern Art (MoMA) Collection](https://github.com/MuseumofModernArt/collection) dataset, publicly available on GitHub. This dataset contains detailed metadata about artworks and artists included in the MoMA collection.
- 
-The dataset consists of two main tables:
- 
-- Artworks (~160,000 records), containing information such as title, year of creation, medium, department, dimensions, and acquisition date.
- 
-- Artists (~15,000 records), containing attributes such as nationality, gender, and birth/death year.
- 
-The dataset is well-structured and widely used in data analysis and visualization projects, making it suitable for our study. However, some preprocessing will be required before visualization.
- 
-In particular, the artworks dataset stores artist identifiers as arrays, which must be expanded and linked to the artists table. Some categorical variables (e.g., medium or classification) contain inconsistent textual values that may require normalization. Certain attributes, such as gender or nationality, contain missing values that need to be handled during analysis.
- 
-Overall, the dataset quality is high and requires moderate preprocessing, mainly involving table joins, cleaning of categorical variables, and aggregation by time periods or geographic regions. Since the data is already structured and publicly available, the focus of the project will remain on analysis and visualization rather than data collection, which aligns with the objectives of this course.
- 
-### Problematic
- 
-Museums play an important role in shaping cultural narratives by determining which artists and artworks are included in their collections. In recent years, questions about representation and diversity in major art institutions have gained increasing attention.
- 
-This project aims to explore diversity within the Museum of Modern Art (MoMA) collection by analyzing the demographic and geographic characteristics of the artists represented. In particular, we investigate how representation varies according to gender, nationality, and time period, and whether the composition of the collection has evolved over time.
- 
-Through interactive visualizations, the project seeks to reveal structural patterns that may not be immediately visible in raw data. Our planned interface includes several coordinated views: an animated timeline showing how gender and nationality balance has shifted decade by decade, an interactive world map highlighting geographic concentration and its evolution, and filterable charts allowing users to explore representation across departments and artistic mediums. These views will be linked, so that selecting a time period or region in one view updates the others, enabling fluid exploration of the data.
- 
-We plan to implement the project using D3.js for custom visualizations, combined with Svelte for building a responsive and modular interface. This stack allows us to create highly interactive, bindable components while keeping the codebase lightweight.
- 
-Rather than evaluating curatorial decisions, our goal is to provide a data-driven perspective on the composition of a major modern art collection. By visualizing these patterns, we aim to offer an intuitive and exploratory interface that allows users to better understand how representation in modern art collections has evolved.
- 
-The target audience includes students, researchers, and anyone interested in art history, cultural institutions, and the intersection between data visualization and cultural analysis.
- 
-### Exploratory Data Analysis
- 
-The full exploratory analysis is available in `notebooks/exploratory_analysis.ipynb`.
- 
-#### Dataset Overview
- 
-The original dataset contains 160,248 artworks (30 columns) and 15,803 artists (9 columns). After cleaning (removing irrelevant columns, handling missing values, and normalizing categories) we retained 144,149 artworks (90.0%) and 11,879 artists (75.2%).
- 
-#### Key Findings
- 
-**Gender distribution** reveals a significant imbalance: male artists represent 80.3% of the collection (9,536), while female artists account for only 19.7% (2,336), with just 7 non-binary artists.
- 
-**Geographic concentration** is equally pronounced. American artists dominate at 41.0% (4,872), followed by German (7.4%), French (6.6%), British (6.6%), and Italian (4.0%). The top 5 nationalities alone represent 65.6% of all artists, with a strong skew toward Western countries.
- 
-**Temporal coverage** spans from 1768 to 2026 across 92,564 dated artworks, with peak representation in the 1960s–1980s, reflecting MoMA's modern and contemporary focus.
- 
-**Department distribution** is dominated by Drawings & Prints (50.1%), followed by Architecture & Design (23.0%) and Photography (21.3%). Traditional Painting & Sculpture accounts for only 2.8%.
- 
-#### Summary
- 
-These patterns (a 4:1 male-to-female ratio, strong Western geographic concentration, and departmental imbalances) confirm that meaningful diversity trends exist in the data and provide a strong foundation for interactive visual exploration over time.
+# DArts
 
-### Related work
+**Diversity in the MoMA Collection** is a scroll-driven data story for EPFL COM-480. It follows more than 144,000 cleaned MoMA collection records through medium, geography, gender, time, and a final artist-match quiz.
 
-A number of projects have been created using the MoMA collection dataset, spanning from articles to data visualizations. An article by FiveThirtyEight popularized the dataset in 2015, extrapolating statistics on the sizes of all paintings in the collection, artists with the largest number of works in the collection, aquisition data, and painting mediums. Since then, several more projects have used the dataset to analyze gender and nationality distributions and categorize aquisitions by various metrics. However, all of these existing projects produces fairly standard bar charts, pie charts, and choropleths -- none of them provide interactive ways to analyze and explore the data. 
+Live site: https://com-480-data-visualization.github.io/DArts/
 
-Our project differs as it aims to highlight the pace of change of the collection's demographic and geographic characteristics, rather than presenting a static representation as well. In this way, our aim is to produce a more interactive and accessible platform for a general audience to explore these characteristics.
+![DArts preview](website/public/preview.png)
 
-We are taking inspiration from a previous project by one of our team members, found [here](https://epfl-ada.github.io/ada-2025-project-market-miners/frontend/index.html). It employs several distinct visualizations, but the method we are most inspired by is a 3D, interactive globe that presents geographical data and allows users to click on different parts of the globe to read about certain events. This map, as well as the other visualizations on the page, can be filtered by key parameters as the user desires. 
+## Project Pitch
 
-## Milestone 2 (17th April, 5pm)
+MoMA is often experienced through a small set of famous paintings and sculptures. The recorded collection tells a different story: paper works dominate the archive, a small group of countries accounts for most credited works, gender parity arrives late and unevenly, and representation varies strongly by medium. DArts turns those patterns into a martini-glass narrative: authored scenes first, an open medium explorer next, and a personal underrepresented-artist match at the end.
 
-**10% of the final grade**
+## Team
 
-We aim to visualize diversity in the MoMA collection through an interactive, scroll-driven website. The project focuses on how representation varies by gender, nationality, medium, and decade, while helping users discover underrepresented artists.
+| Student | SCIPER |
+| --- | --- |
+| Oussama Ghali | 341478 |
+| Nour Guermazi | 314474 |
+| Isabella Linde | 423106 |
 
-Planned narrative:
-- Scene 1: medium grid showing the overall composition of the collection
-- Scene 2: interactive globe showing artist origins and their evolution over time
-- Scene 3: gender trends by decade and by curatorial department
-- Scene 4: open explorer comparing media and departments with filters
-- Scene 5: short quiz matching users to an underrepresented artist
+## Tech Stack
 
-Tools and lectures:
-- `Svelte`, `D3.js`, `HTML/CSS/JS`, `Python/pandas`, `TopoJSON`, `Vite`, `Figma`
-- Lectures: `Data`, `D3.js`, `Interactions`, `Maps`, `Perception & Colors`
+- Svelte 5 + Vite
+- D3 for scales, layouts, geo projection, and path generation
+- TopoJSON for bundled world topology
+- Python + pandas for build-time data aggregation
+- GitHub Pages deployment through GitHub Actions
 
-Implementation plan:
-- MVP: preprocess the data, build the website skeleton, add a shared decade slider, implement the globe and core charts, and deploy a working prototype
-- Extra ideas: richer scroll transitions, artist-matching quiz, visitor-sentiment analysis, and an alternative pictograph for Scene 4
+## Local Development
 
-Prototype and sketches:
-- Prototype: [https://com-480-data-visualization.github.io/DArts/](https://com-480-data-visualization.github.io/DArts/)
-- Current site already includes the main skeleton, decade slider, globe, and core charts
-- Sketches for Scenes 1 to 5 are referenced in [Milestone_2.pdf](Milestone_2.pdf)
+```bash
+cd website
+npm install
+npm run dev
+```
 
+Production build:
 
-## Milestone 3 (29th May, 5pm)
+```bash
+cd website
+npm run lint
+npm run build
+npm run preview
+```
 
-**80% of the final grade**
+Regenerate data aggregates:
 
+```bash
+python data/build_aggregates.py
+```
 
-## Late policy
+The Vite base path is `/DArts/`, matching the GitHub Pages deployment URL.
 
-- < 24h: 80% of the grade for the milestone
-- < 48h: 70% of the grade for the milestone
+## Data
 
+Source: [Museum of Modern Art Collection](https://github.com/MuseumofModernArt/collection), public dataset.
+
+The raw MoMA files are tracked as the `data/moma-collection` submodule. `data/build_aggregates.py` reads the raw CSVs and writes compact JSON files to `website/public/data/`.
+
+Current reconciliation from `data/build_report.txt`:
+
+- Raw artworks: 160,248
+- Cleaned artworks used by the site: 144,149
+- Dated cleaned artworks after permissive parsing: 141,884
+- Cleaned artists: 11,879
+- Artist credits: 160,035
+- `medium_totals.json` reconciles to 144,149 works
+
+The website never fetches raw CSVs at runtime. It uses pre-aggregated JSON, and the larger `artist_index.json` is loaded only when the explorer expansion or quiz needs it.
+
+## Folder Structure
+
+```text
+.
+├─ data/
+│  ├─ build_aggregates.py
+│  ├─ build_report.txt
+│  ├─ nationality_to_iso3.json
+│  ├─ regions.json
+│  └─ moma-collection/
+├─ notebooks/
+│  └─ exploratory_analysis.ipynb
+├─ website/
+│  ├─ public/data/
+│  ├─ public/topology/world-110m.json
+│  ├─ src/App.svelte
+│  └─ src/lib/
+│     ├─ charts/
+│     ├─ components/
+│     ├─ design/
+│     ├─ scenes/
+│     ├─ stores/
+│     └─ utils/
+└─ .github/workflows/deploy.yml
+```
+
+## Narrative Scenes
+
+1. Hero - `DArts`
+2. The Collection Takes Shape - treemap of collection areas
+3. Where Are These Artists From? - orthographic globe with linked country selection
+4. What About Gender? - female-credited share line chart and department small multiples
+5. Does Your Medium Matter? - filterable medium explorer with 100% stacked bars
+6. Who Are You In The Collection? - deterministic underrepresented artist match
+7. Footer - credits, data attribution, and disclaimer
+
+## Deployment
+
+Pushing to `master` or `main` runs `.github/workflows/deploy.yml`.
+
+The workflow installs dependencies with Node 20, runs lint, builds `website/dist`, and publishes it to the `gh-pages` branch with `peaceiris/actions-gh-pages@v4`.
+
+## Notes
+
+This project analyzes the recorded MoMA collection metadata. Demographic fields are limited to what MoMA records; absence in the data is not a judgment of curatorial intent or of an artist's significance.

@@ -92,11 +92,7 @@
     <div class="track-base"></div>
     <div class="track-fill" style:left={`${percent(minDecade)}%`} style:right={`${100 - percent(maxDecade)}%`}></div>
     {#each decades as decade}
-      <span
-        class="tick"
-        class:major={(decade - DECADE_MIN) % 40 === 0}
-        style:left={`${percent(decade)}%`}
-      >
+      <span class="tick" class:major={(decade - DECADE_MIN) % 40 === 0} style:left={`${percent(decade)}%`}>
         {#if (decade - DECADE_MIN) % 40 === 0}
           <span>{decade}</span>
         {/if}
