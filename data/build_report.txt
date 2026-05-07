@@ -1,5 +1,5 @@
 DArts aggregate build report
-generated_at: 2026-05-07T19:44:43+00:00
+generated_at: 2026-05-07T20:02:09+00:00
 
 raw_artworks: 160,248
 cleaned_artworks: 144,149
@@ -48,6 +48,7 @@ outputs:
   department_by_decade.json: 8,492 bytes
   gender.json: 174 bytes
   gender_by_decade.json: 3,887 bytes
+  gender_by_decade_country.json: 82,379 bytes
   gender_by_decade_department.json: 21,893 bytes
   globe_artists.json: 667,725 bytes
   globe_countries.json: 5,866 bytes

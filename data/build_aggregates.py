@@ -459,6 +459,9 @@ def main() -> None:
     gender_by_dept = credits.groupby(["decade", "department", "gender"], dropna=False).size().reset_index(name="n")
     write_json("gender_by_decade_department.json", records_from_df(gender_by_dept))
 
+    gender_by_country = credits.groupby(["decade", "iso3", "gender"], dropna=False).size().reset_index(name="n")
+    write_json("gender_by_decade_country.json", records_from_df(gender_by_country))
+
     dept_counts = artworks["Department"].value_counts().reset_index()
     dept_counts.columns = ["department", "n"]
     write_json("department.json", add_count_alias(records_from_df(dept_counts)))

@@ -12,11 +12,13 @@
   import Scene0Hero from './lib/scenes/Scene0Hero.svelte';
   import Scene1Mediums from './lib/scenes/Scene1Mediums.svelte';
   import Scene2Globe from './lib/scenes/Scene2Globe.svelte';
+  import Scene3Gender from './lib/scenes/Scene3Gender.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
   let genderData = $state([]);
   let genderByDecade = $state([]);
+  let genderByDepartment = $state([]);
   let nationalityData = $state([]);
   let nationalityByDecade = $state([]);
   let departmentData = $state([]);
@@ -27,6 +29,7 @@
   let mediumTotals = $state([]);
   let countryByDecade = $state([]);
   let countrySummary = $state([]);
+  let genderByCountry = $state([]);
   let selectedDecade = $state(null);
   let showFilterDebug = $state(false);
   let showComponentDemo = $state(false);
@@ -41,7 +44,8 @@
       'nationality', 'nationality_by_decade',
       'department', 'department_by_decade', 'timeline',
       'globe_countries', 'globe_artists', 'medium_totals',
-      'country_by_decade', 'country_summary'
+      'country_by_decade', 'country_summary', 'gender_by_decade_country',
+      'gender_by_decade_department'
     ];
 
     Promise.all(files.map(f => fetch(`./data/${f}.json`).then(r => r.json())))
@@ -50,7 +54,8 @@
         [summary, genderData, genderByDecade, nationalityData,
          nationalityByDecade, departmentData, departmentByDecade,
          timelineData, globeCountries, globeArtists, mediumTotals,
-         countryByDecade, countrySummary] = results;
+         countryByDecade, countrySummary, genderByCountry,
+         genderByDepartment] = results;
       });
 
     return () => {
@@ -72,6 +77,13 @@
   <Scene0Hero {summary} />
   <Scene1Mediums data={mediumTotals} />
   <Scene2Globe {countryByDecade} {countrySummary} timeline={timelineData} />
+  <Scene3Gender
+    genderByDecade={genderByDecade}
+    genderByDepartment={genderByDepartment}
+    genderByCountry={genderByCountry}
+    {countrySummary}
+    timeline={timelineData}
+  />
 
   <div class="section">
     <DecadeSlider {timelineData} bind:selectedDecade />
