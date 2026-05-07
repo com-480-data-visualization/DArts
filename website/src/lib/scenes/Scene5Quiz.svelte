@@ -97,8 +97,8 @@
           <p class="note">No exact match. Showing closest fit.</p>
         {/if}
         <h3>{result.artist.name}</h3>
-        <p>{result.artist.nationality} · {result.artist.gender} · {lifespan(result.artist)}</p>
-        <p><em>{result.artist.sample_work_title}</em>{#if result.artist.sample_work_year}, {result.artist.sample_work_year}{/if} · {result.artist.sample_work_medium}</p>
+        <p>{result.artist.nationality ?? 'nationality unknown'} &middot; {result.artist.gender} &middot; {lifespan(result.artist)}</p>
+        <p><em>{result.artist.sample_work_title}</em>{#if result.artist.sample_work_year}, {result.artist.sample_work_year}{/if} &middot; {result.artist.medium_primary}</p>
         <AnchorBar artistName={result.artist.name} artistCount={result.artist.n_works} />
         <div class="actions">
           <button type="button" onclick={reset}>Try again</button>

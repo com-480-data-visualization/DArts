@@ -393,6 +393,8 @@ def add_count_alias(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for stale_json in OUTPUT_DIR.glob("*.json"):
+        stale_json.unlink()
     nationality_to_iso, regions = load_lookup_files()
 
     artworks_raw = pd.read_csv(RAW_DIR / "Artworks.csv", low_memory=False)
@@ -450,9 +452,6 @@ def main() -> None:
     timeline_records = add_count_alias(records_from_df(timeline.sort_values("decade")))
     write_json("timeline.json", timeline_records)
 
-    gender = credits.groupby("gender", dropna=False).size().reset_index(name="n")
-    write_json("gender.json", add_count_alias(records_from_df(gender)))
-
     gender_by_decade = credits.groupby(["decade", "gender"], dropna=False).size().reset_index(name="n")
     write_json("gender_by_decade.json", add_count_alias(records_from_df(gender_by_decade)))
 
@@ -461,18 +460,6 @@ def main() -> None:
 
     gender_by_country = credits.groupby(["decade", "iso3", "gender"], dropna=False).size().reset_index(name="n")
     write_json("gender_by_decade_country.json", records_from_df(gender_by_country))
-
-    dept_counts = artworks["Department"].value_counts().reset_index()
-    dept_counts.columns = ["department", "n"]
-    write_json("department.json", add_count_alias(records_from_df(dept_counts)))
-
-    dept_by_decade = artworks.groupby(["decade", "Department"], dropna=False).size().reset_index(name="n")
-    dept_by_decade = dept_by_decade.rename(columns={"Department": "department"})
-    write_json("department_by_decade.json", add_count_alias(records_from_df(dept_by_decade)))
-
-    classification = artworks["Classification"].value_counts().head(20).reset_index()
-    classification.columns = ["classification", "n"]
-    write_json("classification.json", add_count_alias(records_from_df(classification)))
 
     country_credits = credits.dropna(subset=["iso3"]).copy()
     country_by_decade = (
@@ -505,31 +492,6 @@ def main() -> None:
         )
     country_summary_records.sort(key=lambda item: item["n"], reverse=True)
     write_json("country_summary.json", country_summary_records)
-    write_json(
-        "globe_countries.json",
-        [
-            {"iso": row["iso3"], "nationality": row["country_name"], "count": row["n"]}
-            for row in country_summary_records
-        ],
-    )
-
-    globe_artist_records: list[dict[str, Any]] = []
-    for (iso3, decade), group in country_credits.groupby(["iso3", "decade"], dropna=False):
-        sorted_group = group.sort_values(["artist_name", "title"]).head(5)
-        for record in sorted_group.to_dict(orient="records"):
-            globe_artist_records.append(
-                {
-                    "iso": record["iso3"],
-                    "nationality": record["country_name"],
-                    "decade": json_ready(record["decade"]),
-                    "artist": record["artist_name"],
-                    "title": record["title"],
-                    "date": record["date_label"],
-                    "medium": record["medium"],
-                    "gender": record["gender"],
-                }
-            )
-    write_json("globe_artists.json", globe_artist_records)
 
     top_medium_groups = credits["medium_group"].value_counts().head(9).index.tolist()
     medium_breakdown = (
@@ -570,23 +532,32 @@ def main() -> None:
         first_decade = json_ready(decades.get("min")) if decades else birth_decade
         last_decade = json_ready(decades.get("max")) if decades else birth_decade
         sample = artist_samples.get(artist_id, {})
+        if int(artist_counts.get(artist_id, 0)) <= 0:
+            continue
+        record = {
+            "artist_id": artist_id,
+            "name": clean_token(getattr(artist, "DisplayName")),
+            "nationality": nationality,
+            "iso3": iso3,
+            "region": get_region(iso3, regions),
+            "gender": normalize_gender(getattr(artist, "Gender")),
+            "year_birth": birth,
+            "year_death": death,
+            "decade_active_first": first_decade,
+            "decade_active_last": last_decade,
+            "medium_primary": artist_medium_primary.get(artist_id, "Other"),
+            "n_works": int(artist_counts.get(artist_id, 0)),
+            "sample_work_title": sample.get("title"),
+            "sample_work_year": json_ready(sample.get("year")),
+        }
         artist_records.append(
             {
-                "artist_id": artist_id,
-                "name": clean_token(getattr(artist, "DisplayName")),
-                "nationality": nationality,
-                "iso3": iso3,
-                "region": get_region(iso3, regions),
-                "gender": normalize_gender(getattr(artist, "Gender")),
-                "year_birth": birth,
-                "year_death": death,
-                "decade_active_first": first_decade,
-                "decade_active_last": last_decade,
-                "medium_primary": artist_medium_primary.get(artist_id, "Other"),
-                "n_works": int(artist_counts.get(artist_id, 0)),
-                "sample_work_title": sample.get("title"),
-                "sample_work_year": json_ready(sample.get("year")),
-                "sample_work_medium": sample.get("medium_group"),
+                key: value
+                for key, value in record.items()
+                if value is not None
+                and value != ""
+                and not (key == "decade_active_last" and value == record.get("decade_active_first"))
+                and not (key == "region" and value == "Unknown")
             }
         )
     artist_records.sort(key=lambda record: (record["name"] or ""))

@@ -102,7 +102,7 @@
       .filter((artist) => !state.selectedRegions.size || state.selectedRegions.has(artist.region))
       .filter((artist) => {
         const first = artist.decade_active_first ?? 1860;
-        const last = artist.decade_active_last ?? 2020;
+        const last = artist.decade_active_last ?? first ?? 2020;
         return last >= state.decadeRange[0] && first <= state.decadeRange[1];
       })
       .sort((a, b) => b.n_works - a.n_works || a.name.localeCompare(b.name))
