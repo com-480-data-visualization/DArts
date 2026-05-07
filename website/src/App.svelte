@@ -1,6 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import Hero from './lib/Hero.svelte';
   import DecadeSlider from './lib/DecadeSlider.svelte';
   import GlobeChart from './lib/GlobeChart.svelte';
   import GenderChart from './lib/GenderChart.svelte';
@@ -10,6 +9,7 @@
   import ComponentDemo from './lib/components/ComponentDemo.svelte';
   import FilterStoreDebug from './lib/components/FilterStoreDebug.svelte';
   import Tooltip from './lib/components/Tooltip.svelte';
+  import Scene0Hero from './lib/scenes/Scene0Hero.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
@@ -62,7 +62,7 @@
 {#if showComponentDemo}
   <ComponentDemo />
 {:else if summary}
-  <Hero {summary} />
+  <Scene0Hero {summary} />
 
   <div class="section">
     <DecadeSlider {timelineData} bind:selectedDecade />
