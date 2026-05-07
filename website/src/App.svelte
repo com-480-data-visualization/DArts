@@ -13,6 +13,7 @@
   import Scene1Mediums from './lib/scenes/Scene1Mediums.svelte';
   import Scene2Globe from './lib/scenes/Scene2Globe.svelte';
   import Scene3Gender from './lib/scenes/Scene3Gender.svelte';
+  import Scene4Explorer from './lib/scenes/Scene4Explorer.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
 
   let summary = $state(null);
@@ -30,6 +31,7 @@
   let countryByDecade = $state([]);
   let countrySummary = $state([]);
   let genderByCountry = $state([]);
+  let mediumBreakdown = $state([]);
   let selectedDecade = $state(null);
   let showFilterDebug = $state(false);
   let showComponentDemo = $state(false);
@@ -45,7 +47,7 @@
       'department', 'department_by_decade', 'timeline',
       'globe_countries', 'globe_artists', 'medium_totals',
       'country_by_decade', 'country_summary', 'gender_by_decade_country',
-      'gender_by_decade_department'
+      'gender_by_decade_department', 'medium_breakdown'
     ];
 
     Promise.all(files.map(f => fetch(`./data/${f}.json`).then(r => r.json())))
@@ -55,7 +57,7 @@
          nationalityByDecade, departmentData, departmentByDecade,
          timelineData, globeCountries, globeArtists, mediumTotals,
          countryByDecade, countrySummary, genderByCountry,
-         genderByDepartment] = results;
+         genderByDepartment, mediumBreakdown] = results;
       });
 
     return () => {
@@ -84,6 +86,7 @@
     {countrySummary}
     timeline={timelineData}
   />
+  <Scene4Explorer data={mediumBreakdown} {countrySummary} timeline={timelineData} />
 
   <div class="section">
     <DecadeSlider {timelineData} bind:selectedDecade />

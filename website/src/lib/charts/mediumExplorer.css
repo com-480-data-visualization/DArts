@@ -1,0 +1,122 @@
+.medium-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.medium-grid article {
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-on-light);
+  transition: opacity var(--duration-state) var(--ease-out), scale var(--duration-state) var(--ease-out);
+}
+
+.medium-grid article.dimmed {
+  opacity: 0.6;
+  scale: 0.98;
+}
+
+.medium-grid article.expanded {
+  grid-column: span 2;
+}
+
+.medium-grid .panel-button {
+  width: 100%;
+  border: 0;
+  padding: var(--space-2);
+  color: var(--fg-on-light-strong);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.medium-grid .panel-button:hover h3 {
+  color: var(--accent-primary);
+}
+
+.medium-grid header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  align-items: baseline;
+  margin-bottom: var(--space-2);
+}
+
+.medium-grid h3,
+.medium-grid p {
+  margin: 0;
+}
+
+.medium-grid h3 {
+  font-family: var(--font-ui);
+  font-size: var(--type-h3-size);
+}
+
+.medium-grid .bar-group {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.medium-grid .bar-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: var(--space-1);
+  align-items: center;
+  color: var(--fg-on-light-mute);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+}
+
+.medium-grid .stack {
+  display: flex;
+  height: 0.75rem;
+  background: var(--bg-light);
+}
+
+.medium-grid i {
+  display: block;
+  min-width: 1px;
+  border-right: 1px solid var(--bg-paper);
+}
+
+.medium-grid .expanded-body {
+  display: grid;
+  gap: var(--space-1);
+  padding: 0 var(--space-2) var(--space-2);
+}
+
+.medium-grid .artist-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1fr) 7rem 2.5rem;
+  gap: var(--space-1);
+  align-items: center;
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+}
+
+.medium-grid .artist-row b {
+  display: block;
+  height: 0.5rem;
+  background: var(--accent-primary);
+}
+
+.medium-grid .artist-row em {
+  font-style: normal;
+  text-align: right;
+}
+
+.empty {
+  padding: var(--space-4);
+  border: 1px solid var(--rule-on-light);
+  background: var(--bg-paper);
+  font-family: var(--font-body);
+}
+
+@media (max-width: 900px) {
+  .medium-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .medium-grid article.expanded {
+    grid-column: span 1;
+  }
+}
