@@ -295,7 +295,9 @@ def json_ready(value: Any) -> Any:
     if pd.isna(value):
         return None
     if hasattr(value, "item"):
-        return value.item()
+        value = value.item()
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
     return value
 
 
@@ -320,6 +322,8 @@ def seeded_index(seed: str, length: int) -> int:
 
 
 def lifespan(begin: int | None, end: int | None) -> str:
+    begin = json_ready(begin)
+    end = json_ready(end)
     if begin and end:
         return f"{begin}-{end}"
     if begin:
