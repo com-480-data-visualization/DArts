@@ -1,0 +1,59 @@
+DArts aggregate build report
+generated_at: 2026-05-07T19:44:43+00:00
+
+raw_artworks: 160,248
+cleaned_artworks: 144,149
+expected_cleaned_artworks: 144,149
+artworks_excluded_by_m1_key_fields: 16,099
+dated_artworks_after_permissive_parse: 141,884
+undated_after_parse_within_cleaned_corpus: 2,265
+raw_artists: 15,803
+cleaned_artists: 11,879
+expected_cleaned_artists: 11,879
+artist_credits: 160,035
+
+medium_totals_sum: 144,149
+medium_totals_reconciles: True
+country_mapped_artist_credits: 156,360
+country_unmapped_artist_credits: 3,675
+country_unmapped_share_of_credits: 2.30%
+
+top_countries_by_credit:
+  United States: 80,102
+  France: 21,014
+  Germany: 10,666
+  United Kingdom: 6,786
+  Italy: 3,533
+  Spain: 3,362
+  Russia: 3,248
+  Japan: 2,929
+
+top_unmapped_nationality_labels:
+  Unknown: 3,443
+  Nationality unknown: 219
+  Czechoslovakian: 4
+  Coptic: 3
+  Catalan: 2
+  Persian: 1
+  Yugoslavian: 1
+  Sahrawi: 1
+  Caribbean: 1
+
+outputs:
+  artist_index.json: 4,426,088 bytes
+  classification.json: 1,081 bytes
+  country_by_decade.json: 51,809 bytes
+  country_summary.json: 38,950 bytes
+  department.json: 467 bytes
+  department_by_decade.json: 8,492 bytes
+  gender.json: 174 bytes
+  gender_by_decade.json: 3,887 bytes
+  gender_by_decade_department.json: 21,893 bytes
+  globe_artists.json: 667,725 bytes
+  globe_countries.json: 5,866 bytes
+  medium_breakdown.json: 597,375 bytes
+  medium_totals.json: 438 bytes
+  nationality.json: 1,223 bytes
+  nationality_by_decade.json: 7,818 bytes
+  summary.json: 288 bytes
+  timeline.json: 1,051 bytes
