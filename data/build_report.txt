@@ -1,5 +1,5 @@
 DArts aggregate build report
-generated_at: 2026-05-07T20:02:09+00:00
+generated_at: 2026-05-07T20:16:57+00:00
 
 raw_artworks: 160,248
 cleaned_artworks: 144,149
@@ -40,10 +40,10 @@ top_unmapped_nationality_labels:
   Caribbean: 1
 
 outputs:
-  artist_index.json: 4,426,088 bytes
+  artist_index.json: 4,426,131 bytes
   classification.json: 1,081 bytes
   country_by_decade.json: 51,809 bytes
-  country_summary.json: 38,950 bytes
+  country_summary.json: 38,951 bytes
   department.json: 467 bytes
   department_by_decade.json: 8,492 bytes
   gender.json: 174 bytes

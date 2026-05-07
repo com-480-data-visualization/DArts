@@ -309,7 +309,7 @@ def records_from_df(df: pd.DataFrame) -> list[dict[str, Any]]:
 def write_json(name: str, data: Any) -> None:
     path = OUTPUT_DIR / name
     with path.open("w", encoding="utf-8") as handle:
-        json.dump(data, handle, separators=(",", ":"), ensure_ascii=True)
+        json.dump(data, handle, separators=(",", ":"), ensure_ascii=True, allow_nan=False)
 
 
 def seeded_index(seed: str, length: int) -> int:
@@ -499,7 +499,7 @@ def main() -> None:
                 "sample_artist": sample["artist_name"],
                 "sample_lifespan": lifespan(sample["year_birth"], sample["year_death"]),
                 "sample_work_title": sample["title"],
-                "sample_work_year": sample["year"],
+                "sample_work_year": json_ready(sample["year"]),
                 "sample_work_medium": sample["medium"],
             }
         )
@@ -585,7 +585,7 @@ def main() -> None:
                 "medium_primary": artist_medium_primary.get(artist_id, "Other"),
                 "n_works": int(artist_counts.get(artist_id, 0)),
                 "sample_work_title": sample.get("title"),
-                "sample_work_year": sample.get("year"),
+                "sample_work_year": json_ready(sample.get("year")),
                 "sample_work_medium": sample.get("medium_group"),
             }
         )
