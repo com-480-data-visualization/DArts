@@ -680,6 +680,7 @@ def main() -> None:
             "n_works": int(artist_counts.get(artist_id, 0)),
             "sample_work_title": sample.get("title"),
             "sample_work_year": json_ready(sample.get("year")),
+            "sample_work_url": sample.get("url"),
         }
         artist_records.append(
             {

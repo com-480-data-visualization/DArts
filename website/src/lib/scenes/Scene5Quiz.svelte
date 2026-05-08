@@ -1,6 +1,6 @@
 <script>
   import AnchorBar from '../charts/AnchorBar.svelte';
-  import GeneratedWorkCard from '../charts/GeneratedWorkCard.svelte';
+  import ArtworkRecordCard from '../charts/ArtworkRecordCard.svelte';
   import SceneTitle from '../components/SceneTitle.svelte';
   import { matchArtist } from '../utils/match.js';
   import './scene5Quiz.css';
@@ -194,7 +194,7 @@
                 </p>
               </div>
             </div>
-            <GeneratedWorkCard artist={result.artist} />
+            <ArtworkRecordCard artist={result.artist} />
             <AnchorBar artistName={result.artist.name} artistCount={result.artist.n_works} />
             <div class="actions">
               <button type="button" onclick={reset}>Try again</button>
