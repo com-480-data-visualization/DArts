@@ -331,6 +331,41 @@ def lifespan(begin: int | None, end: int | None) -> str:
     return "lifespan unknown"
 
 
+def artist_story(
+    artist_name: str,
+    country_name: str,
+    n_works: int,
+    top_medium: str,
+    first_decade: int | None,
+    last_decade: int | None,
+    work_title: str | None,
+    work_year: int | None,
+) -> str:
+    """Build a factual collection note without inventing biography."""
+    country_phrase = (
+        f"the {country_name}"
+        if country_name in {"United States", "United Kingdom", "Netherlands"}
+        else country_name
+    )
+    if first_decade and last_decade and first_decade != last_decade:
+        span = f"from the {first_decade}s to the {last_decade}s"
+    elif first_decade:
+        span = f"in the {first_decade}s"
+    else:
+        span = "across undated or partially dated records"
+    work = ""
+    if work_title:
+        work = f" One representative record is {work_title}"
+        if work_year:
+            work += f" ({work_year})"
+        work += "."
+    return (
+        f"In this dataset, {artist_name} is the most represented artist credited to {country_phrase}, "
+        f"with {n_works:,} credited works. MoMA's records place this artist mostly in {top_medium}, "
+        f"with works appearing {span}.{work}"
+    )
+
+
 def load_lookup_files() -> tuple[dict[str, str], dict[str, str]]:
     with (DATA_DIR / "nationality_to_iso3.json").open("r", encoding="utf-8") as handle:
         raw_nationality_to_iso = json.load(handle)
@@ -479,10 +514,19 @@ def main() -> None:
         medium_counter = Counter(group["medium_group"])
         sorted_group = group.sort_values(["artist_name", "title", "year"], na_position="last")
         sample = sorted_group.iloc[seeded_index(str(iso3), len(sorted_group))]
+        featured_artist_id = int(group["artist_id"].value_counts().sort_values(ascending=False).index[0])
+        featured_group = group[group["artist_id"] == featured_artist_id].sort_values(["year", "title"], na_position="last")
+        featured_sample = featured_group.iloc[0]
+        featured_medium = Counter(featured_group["medium_group"]).most_common(1)[0][0]
+        featured_decades = [int(decade) for decade in featured_group["decade"].dropna().unique()]
+        featured_first = min(featured_decades) if featured_decades else None
+        featured_last = max(featured_decades) if featured_decades else None
+        featured_work_year = json_ready(featured_sample["year"])
+        country_name = ISO3_TO_COUNTRY.get(iso3, iso3)
         country_summary_records.append(
             {
                 "iso3": iso3,
-                "country_name": ISO3_TO_COUNTRY.get(iso3, iso3),
+                "country_name": country_name,
                 "region": regions.get(iso3, "Unknown"),
                 "n": int(len(group)),
                 "n_artists": int(group["artist_id"].nunique()),
@@ -492,6 +536,29 @@ def main() -> None:
                 "sample_work_title": sample["title"],
                 "sample_work_year": json_ready(sample["year"]),
                 "sample_work_medium": sample["medium"],
+                "featured_artist_id": featured_artist_id,
+                "featured_artist": featured_sample["artist_name"],
+                "featured_artist_n_works": int(len(featured_group)),
+                "featured_artist_lifespan": lifespan(
+                    featured_sample["year_birth"],
+                    featured_sample["year_death"],
+                ),
+                "featured_artist_gender": featured_sample["gender"],
+                "featured_artist_medium": featured_medium,
+                "featured_decade_first": featured_first,
+                "featured_decade_last": featured_last,
+                "featured_work_title": featured_sample["title"],
+                "featured_work_year": featured_work_year,
+                "featured_story": artist_story(
+                    featured_sample["artist_name"],
+                    country_name,
+                    int(len(featured_group)),
+                    featured_medium,
+                    featured_first,
+                    featured_last,
+                    featured_sample["title"],
+                    featured_work_year,
+                ),
             }
         )
     country_summary_records.sort(key=lambda item: item["n"], reverse=True)

@@ -5,11 +5,22 @@
 }
 
 .medium-grid article {
+  position: relative;
   background: var(--bg-paper);
   border: 1px solid var(--rule-on-light);
+  border-top: 3px solid var(--fg-on-light-strong);
   transition:
     opacity var(--duration-state) var(--ease-out),
-    scale var(--duration-state) var(--ease-out);
+    scale var(--duration-state) var(--ease-out),
+    border-color var(--duration-tooltip-in) var(--ease-out);
+}
+
+.medium-grid article::before {
+  content: '';
+  position: absolute;
+  inset: var(--space-1);
+  border: 1px solid color-mix(in srgb, var(--rule-on-light) 65%, transparent);
+  pointer-events: none;
 }
 
 .medium-grid article.dimmed {
@@ -19,12 +30,14 @@
 
 .medium-grid article.expanded {
   grid-column: span 2;
+  border-top-color: var(--accent-primary);
 }
 
 .medium-grid .panel-button {
+  position: relative;
   width: 100%;
   border: 0;
-  padding: var(--space-2);
+  padding: var(--space-3);
   color: var(--fg-on-light-strong);
   background: transparent;
   text-align: left;
@@ -33,6 +46,12 @@
 
 .medium-grid .panel-button:hover h3 {
   color: var(--accent-primary);
+}
+
+.medium-grid .panel-button:hover .stack,
+.medium-grid .panel-button:focus-visible .stack {
+  outline: 1px solid color-mix(in srgb, var(--accent-primary) 48%, transparent);
+  outline-offset: 3px;
 }
 
 .medium-grid header {
@@ -50,12 +69,14 @@
 
 .medium-grid h3 {
   font-family: var(--font-ui);
-  font-size: var(--type-h3-size);
+  font-size: clamp(var(--type-h3-size), 2.2vw, var(--type-h2-size));
+  line-height: var(--type-h2-line);
 }
 
 .medium-grid .bar-group {
   display: grid;
-  gap: var(--space-1);
+  gap: var(--space-2);
+  margin-top: var(--space-2);
 }
 
 .medium-grid .bar-row {
@@ -66,12 +87,14 @@
   color: var(--fg-on-light-mute);
   font-family: var(--font-ui);
   font-size: var(--type-small-size);
+  text-transform: uppercase;
 }
 
 .medium-grid .stack {
   display: flex;
-  height: 0.75rem;
+  height: 0.875rem;
   background: var(--bg-light);
+  border: 1px solid var(--rule-on-light);
 }
 
 .medium-grid i {
@@ -83,7 +106,15 @@
 .medium-grid .expanded-body {
   display: grid;
   gap: var(--space-1);
-  padding: 0 var(--space-2) var(--space-2);
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.medium-grid .expanded-body::before {
+  content: 'Top represented artists in this medium';
+  color: var(--fg-on-light-mute);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+  text-transform: uppercase;
 }
 
 .medium-grid .artist-row {

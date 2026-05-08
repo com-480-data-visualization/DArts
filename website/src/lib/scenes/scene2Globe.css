@@ -75,11 +75,13 @@
   right: var(--space-4);
   top: var(--space-4);
   z-index: 3;
-  width: min(24rem, calc(100vw - var(--space-4)));
+  width: min(28rem, calc(100vw - var(--space-4)));
   padding: var(--space-3);
   color: var(--fg-on-dark-strong);
   background: color-mix(in srgb, var(--bg-dark) 88%, transparent);
   border: 1px solid var(--fg-on-dark-mute);
+  backdrop-filter: blur(10px);
+  animation: country-panel-in var(--duration-state) var(--ease-out) both;
 }
 
 .close {
@@ -90,6 +92,13 @@
   color: var(--fg-on-dark-strong);
   background: transparent;
   cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--type-body-size);
+}
+
+.close:hover,
+.close:focus-visible {
+  color: var(--accent-primary);
 }
 
 .scene-globe h3 {
@@ -103,6 +112,9 @@
   display: grid;
   gap: var(--space-1);
   margin: 0;
+  padding: var(--space-2) 0;
+  border-top: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 34%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 34%, transparent);
 }
 
 .scene-globe dl div {
@@ -122,21 +134,127 @@
   font-variant-numeric: tabular-nums;
 }
 
-.scene-globe .sample {
+.artist-label {
+  position: relative;
   margin: var(--space-3) 0 0;
+  padding: var(--space-2);
+  background: color-mix(in srgb, var(--fg-on-dark-strong) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 42%, transparent);
+  border-top: 2px solid var(--accent-primary);
+}
+
+.artist-label::before {
+  content: '';
+  position: absolute;
+  inset: var(--space-1);
+  border: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 24%, transparent);
+  pointer-events: none;
+}
+
+.artist-label .eyebrow,
+.artist-label .story,
+.artist-label .representative,
+.artist-label .caveat {
   color: var(--fg-on-dark-mute);
   font-family: var(--font-body);
 }
 
-.scene-globe .sample span,
-.scene-globe .sample strong {
-  display: block;
+.artist-label .eyebrow {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.scene-globe .sample strong {
-  margin: 0.25rem 0;
+.artist-heading {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: var(--space-2);
+  align-items: center;
+  margin: var(--space-1) 0 var(--space-2);
+}
+
+.monogram {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--fg-on-dark-strong) 72%, transparent);
+  border-radius: 50%;
+  color: var(--accent-primary);
+  font-family: var(--font-display);
+  font-size: var(--type-h2-size);
+}
+
+.artist-heading h4 {
+  margin: 0;
+  color: var(--fg-on-dark-strong);
+  font-family: var(--font-display);
+  font-size: clamp(var(--type-h2-size), 4vw, var(--type-h1-size));
+  line-height: var(--type-h1-line);
+}
+
+.artist-heading p {
+  margin: 0.25rem 0 0;
+  color: var(--fg-on-dark-mute);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+}
+
+.artist-label .story {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: var(--type-body-line);
+}
+
+.artist-label .representative {
+  display: grid;
+  gap: 0.125rem;
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 28%, transparent);
+  font-size: var(--type-small-size);
+}
+
+.artist-label .representative span:first-child,
+.artist-label .caveat {
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+}
+
+.artist-label .representative em {
+  color: var(--fg-on-dark-strong);
+}
+
+.artist-label .caveat {
+  margin: var(--space-1) 0 0;
+  color: color-mix(in srgb, var(--fg-on-dark-mute) 76%, transparent);
+}
+
+.moma-link {
+  display: inline-flex;
+  margin-top: var(--space-2);
+  border-bottom: 1px solid currentColor;
   color: var(--fg-on-dark-strong);
   font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+  text-decoration: none;
+}
+
+.moma-link:hover,
+.moma-link:focus-visible {
+  color: var(--accent-primary);
+}
+
+@keyframes country-panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @media (max-width: 900px) {
@@ -171,5 +289,11 @@
     top: auto;
     bottom: var(--space-2);
     width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .country-panel {
+    animation: none;
   }
 }

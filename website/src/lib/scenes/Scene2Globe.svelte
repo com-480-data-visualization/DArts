@@ -18,6 +18,16 @@
   let summaryByIso = $derived(new Map(countrySummary.map((d) => [d.iso3, d])));
   let selectedSummary = $derived(selectedCountry ? summaryByIso.get(selectedCountry) : null);
   let topThreeShare = $derived(computeTopThreeShare(countryByDecade, range));
+  let selectedArtistUrl = $derived(
+    selectedSummary?.featured_artist_id ? `https://www.moma.org/artists/${selectedSummary.featured_artist_id}` : '',
+  );
+  let selectedArtistName = $derived(selectedSummary?.featured_artist ?? selectedSummary?.sample_artist ?? '');
+  let selectedWorkTitle = $derived(selectedSummary?.featured_work_title ?? selectedSummary?.sample_work_title ?? '');
+  let selectedWorkYear = $derived(selectedSummary?.featured_work_year ?? selectedSummary?.sample_work_year ?? '');
+  let selectedStory = $derived(
+    selectedSummary?.featured_story ??
+      `${selectedSummary?.sample_artist} appears in the selected country's records with the representative work ${selectedSummary?.sample_work_title}.`,
+  );
 
   function computeTopThreeShare(rows, decadeRange) {
     const counts = {};
@@ -28,6 +38,15 @@
     const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
     const top = [...topThree].reduce((sum, iso3) => sum + (counts[iso3] || 0), 0);
     return total ? top / total : 0;
+  }
+
+  function artistInitials(name) {
+    return name
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('');
   }
 </script>
 
@@ -96,13 +115,36 @@
             <dd>{selectedSummary.top_medium}</dd>
           </div>
         </dl>
-        <p class="sample">
-          <span>Sample artist</span>
-          <strong>{selectedSummary.sample_artist}</strong>
-          {selectedSummary.sample_lifespan}<br />
-          <em>{selectedSummary.sample_work_title}</em>
-          {#if selectedSummary.sample_work_year}, {selectedSummary.sample_work_year}{/if}
-        </p>
+        <article class="artist-label">
+          <p class="eyebrow">Most represented artist in this slice</p>
+          <div class="artist-heading">
+            <span class="monogram" aria-hidden="true">{artistInitials(selectedArtistName)}</span>
+            <div>
+              <h4>{selectedArtistName}</h4>
+              <p>
+                {selectedSummary.featured_artist_lifespan ?? selectedSummary.sample_lifespan}
+                {#if selectedSummary.featured_artist_gender}
+                  &middot; {selectedSummary.featured_artist_gender}
+                {/if}
+                {#if selectedSummary.featured_artist_medium}
+                  &middot; {selectedSummary.featured_artist_medium}
+                {/if}
+              </p>
+            </div>
+          </div>
+          <p class="story">{selectedStory}</p>
+          <p class="representative">
+            <span>Representative record</span>
+            <em>{selectedWorkTitle}</em>
+            {#if selectedWorkYear}
+              <span>{selectedWorkYear}</span>
+            {/if}
+          </p>
+          <p class="caveat">This is a collection-count proxy, not a fame ranking.</p>
+          {#if selectedArtistUrl}
+            <a class="moma-link" href={selectedArtistUrl} target="_blank" rel="noopener">Open artist on MoMA</a>
+          {/if}
+        </article>
       </aside>
     {/if}
   </div>

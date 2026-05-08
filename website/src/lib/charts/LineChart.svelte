@@ -95,12 +95,16 @@
 <style>
   .line-chart {
     margin: 0;
+    padding: var(--space-1);
+    background: var(--bg-paper);
+    border: 1px solid var(--rule-on-light);
   }
 
   svg {
     width: 100%;
     height: auto;
     display: block;
+    background: var(--bg-paper);
   }
 
   .grid line {
@@ -148,13 +152,13 @@
 
   .area {
     fill: var(--gender-female);
-    opacity: 0.08;
+    opacity: 0.12;
   }
 
   .series {
     fill: none;
     stroke: var(--gender-female);
-    stroke-width: 2;
+    stroke-width: 3;
     stroke-linejoin: round;
     stroke-linecap: round;
   }
@@ -169,6 +173,15 @@
     fill: var(--bg-paper);
     stroke: var(--gender-female);
     stroke-width: 2;
+    transition:
+      r var(--duration-tooltip-in) var(--ease-out),
+      fill var(--duration-tooltip-in) var(--ease-out);
+  }
+
+  circle:hover,
+  circle:focus-visible {
+    r: 6;
+    fill: var(--gender-female);
   }
 
   circle.small {
