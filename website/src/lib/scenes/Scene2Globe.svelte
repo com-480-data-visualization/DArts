@@ -147,7 +147,7 @@
               <div>
                 <dt>Breadth</dt>
                 <dd>
-                  {selectedSummary.featured_artist_n_departments} departments · {selectedSummary.featured_artist_n_mediums}
+                  {selectedSummary.featured_artist_n_departments} departments / {selectedSummary.featured_artist_n_mediums}
                   media
                 </dd>
               </div>
@@ -160,12 +160,13 @@
               <span>{selectedWorkYear}</span>
             {/if}
           </p>
-          <p class="caveat">
-            This is a transparent collection-based proxy, not a true fame ranking.
-            {#if selectedSummary.featured_artist_score_method}
-              {selectedSummary.featured_artist_score_method}
-            {/if}
-          </p>
+          <p class="caveat">Collection-based proxy, not a true fame ranking.</p>
+          {#if selectedSummary.featured_artist_score_method}
+            <details class="score-method">
+              <summary>How score is computed</summary>
+              <p>{selectedSummary.featured_artist_score_method}</p>
+            </details>
+          {/if}
           {#if selectedArtistUrl}
             <a class="moma-link" href={selectedArtistUrl} target="_blank" rel="noopener">Open artist on MoMA</a>
           {/if}
