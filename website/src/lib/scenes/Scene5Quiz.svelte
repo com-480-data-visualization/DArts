@@ -29,36 +29,48 @@
   let artists = $state([]);
   let loading = $state(false);
   let result = $state(null);
+  let error = $state('');
   let loadPromise = null;
 
   async function loadArtists() {
     if (artists.length) return artists;
-    if (!loadPromise) loadPromise = fetch('./data/artist_index.json').then((r) => r.json());
+    if (!loadPromise) {
+      loadPromise = fetch(`${import.meta.env.BASE_URL}data/artist_index.json`).then((response) => {
+        if (!response.ok) throw new Error(`Could not load artist index (${response.status})`);
+        return response.json();
+      });
+    }
     artists = await loadPromise;
     return artists;
   }
 
   function chooseDecade(range) {
     answers = { ...answers, decadeRange: range };
-    window.setTimeout(() => (stage = 1), 200);
+    stage = 1;
   }
 
   function chooseRegion(region) {
     answers = { ...answers, region };
-    window.setTimeout(() => (stage = 2), 200);
+    stage = 2;
   }
 
   async function chooseMedium(medium) {
     answers = { ...answers, medium };
     stage = 3;
     loading = true;
+    error = '';
     const started = performance.now();
-    const loaded = await loadArtists();
-    const elapsed = performance.now() - started;
-    if (elapsed < 600) await new Promise((resolve) => window.setTimeout(resolve, 600 - elapsed));
-    result = matchArtist(loaded, { ...answers, medium });
-    loading = false;
-    stage = 3;
+    try {
+      const loaded = await loadArtists();
+      const elapsed = performance.now() - started;
+      if (elapsed < 600) await new Promise((resolve) => window.setTimeout(resolve, 600 - elapsed));
+      result = matchArtist(loaded, { ...answers, medium });
+    } catch {
+      error = 'The artist index could not be loaded. Please refresh the page or run the site through Vite.';
+    } finally {
+      loading = false;
+      stage = 3;
+    }
   }
 
   function reset() {
@@ -66,6 +78,7 @@
     answers = { decadeRange: null, region: '', medium: '' };
     result = null;
     loading = false;
+    error = '';
   }
 
   function lifespan(artist) {
@@ -85,6 +98,13 @@
       .slice(0, 2)
       .map((part) => part[0])
       .join('');
+  }
+
+  function resultPrompt() {
+    if (stage === 0) return 'Step 1 of 3: choose a decade.';
+    if (stage === 1) return 'Decade saved. Pick a region next.';
+    if (stage === 2) return 'Almost there. Pick a medium to get your match.';
+    return 'Your artist match will appear here.';
   }
 </script>
 
@@ -151,6 +171,12 @@
             <span></span>
             <p>Finding someone for you...</p>
           </div>
+        {:else if error}
+          <div class="empty-result">
+            <div class="portrait preview" aria-hidden="true">!</div>
+            <p>{error}</p>
+            <button type="button" onclick={reset}>Try again</button>
+          </div>
         {:else if result?.artist}
           <article class="result">
             {#if result.relaxed}
@@ -196,7 +222,7 @@
         {:else}
           <div class="empty-result">
             <div class="portrait preview" aria-hidden="true">?</div>
-            <p>Your artist match will appear here.</p>
+            <p>{resultPrompt()}</p>
           </div>
         {/if}
       </aside>
