@@ -1,5 +1,6 @@
 <script>
   import AnchorBar from '../charts/AnchorBar.svelte';
+  import GeneratedWorkCard from '../charts/GeneratedWorkCard.svelte';
   import SceneTitle from '../components/SceneTitle.svelte';
   import { matchArtist } from '../utils/match.js';
   import './scene5Quiz.css';
@@ -193,24 +194,7 @@
                 </p>
               </div>
             </div>
-            <figure class="work-card">
-              <svg viewBox="0 0 420 250" aria-hidden="true">
-                <rect x="18" y="18" width="384" height="214"></rect>
-                <path d="M52 184 C102 126 130 156 174 98 S274 78 350 150"></path>
-                <path d="M58 72 L148 118 L232 62 L356 116"></path>
-                <circle cx="108" cy="166" r="18"></circle>
-                <circle cx="302" cy="92" r="26"></circle>
-                <line x1="42" y1="204" x2="372" y2="204"></line>
-              </svg>
-              <figcaption>
-                <span>Representative artwork</span>
-                <em>{result.artist.sample_work_title}</em>
-                {#if result.artist.sample_work_year}
-                  <b>{result.artist.sample_work_year}</b>
-                {/if}
-                <b>{result.artist.medium_primary}</b>
-              </figcaption>
-            </figure>
+            <GeneratedWorkCard artist={result.artist} />
             <AnchorBar artistName={result.artist.name} artistCount={result.artist.n_works} />
             <div class="actions">
               <button type="button" onclick={reset}>Try again</button>
