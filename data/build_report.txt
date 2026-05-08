@@ -1,5 +1,5 @@
 DArts aggregate build report
-generated_at: 2026-05-08T21:20:30+00:00
+generated_at: 2026-05-08T22:24:24+00:00
 
 raw_artworks: 160,248
 cleaned_artworks: 144,149
@@ -42,7 +42,7 @@ top_unmapped_nationality_labels:
 outputs:
   artist_index.json: 3,548,506 bytes
   country_by_decade.json: 50,233 bytes
-  country_summary.json: 113,489 bytes
+  country_summary.json: 162,166 bytes
   gender_by_decade.json: 3,753 bytes
   gender_by_decade_country.json: 79,461 bytes
   gender_by_decade_department.json: 21,341 bytes

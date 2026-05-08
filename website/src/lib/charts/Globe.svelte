@@ -17,6 +17,8 @@
   let dragging = $state(false);
   let dragStart = null;
   let rotateStart = null;
+  let pointerDownCountryIndex = null;
+  let pointerMoved = false;
   let frame = 0;
   let reduceMotion = false;
 
@@ -101,6 +103,8 @@
     dragging = true;
     dragStart = [event.clientX, event.clientY];
     rotateStart = rotation;
+    pointerMoved = false;
+    pointerDownCountryIndex = event.target?.dataset?.countryIndex ?? null;
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
@@ -108,11 +112,18 @@
     if (!dragging || !dragStart || !rotateStart) return;
     const dx = event.clientX - dragStart[0];
     const dy = event.clientY - dragStart[1];
+    if (Math.hypot(dx, dy) > 4) pointerMoved = true;
     rotation = [rotateStart[0] + dx * 0.35, Math.max(-65, Math.min(65, rotateStart[1] - dy * 0.35))];
   }
 
-  function onPointerUp() {
+  function onPointerUp(event) {
+    const countryIndex = pointerDownCountryIndex;
+    const shouldSelect = dragging && !pointerMoved && countryIndex !== null;
     dragging = false;
+    pointerDownCountryIndex = null;
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    if (shouldSelect) centerCountry(countries[Number(countryIndex)]);
   }
 
   onMount(async () => {
@@ -150,16 +161,17 @@
       onpointerup={onPointerUp}
       onpointercancel={onPointerUp}
     >
-      {#each countries as country}
+      {#each countries as country, index}
         {@const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')]}
         <path
           d={path(country)}
+          data-country-index={index}
+          data-iso3={iso3}
           fill={fillFor(iso3)}
           class:selected={selectedCountry === iso3}
           class:clickable={Boolean(iso3 && countByIso[iso3])}
           onpointermove={(event) => showTooltip(event, country)}
           onpointerleave={hideTooltip}
-          onclick={() => centerCountry(country)}
           onkeydown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault();

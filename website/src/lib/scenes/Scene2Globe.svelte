@@ -28,6 +28,7 @@
     selectedSummary?.featured_story ??
       `${selectedSummary?.sample_artist} appears in the selected country's records with the representative work ${selectedSummary?.sample_work_title}.`,
   );
+  let selectedScore = $derived(selectedSummary?.featured_artist_score ?? null);
 
   function computeTopThreeShare(rows, decadeRange) {
     const counts = {};
@@ -116,7 +117,7 @@
           </div>
         </dl>
         <article class="artist-label">
-          <p class="eyebrow">Most represented artist in this slice</p>
+          <p class="eyebrow">Collection prominence pick</p>
           <div class="artist-heading">
             <span class="monogram" aria-hidden="true">{artistInitials(selectedArtistName)}</span>
             <div>
@@ -133,6 +134,25 @@
             </div>
           </div>
           <p class="story">{selectedStory}</p>
+          {#if selectedScore !== null}
+            <dl class="score-card" aria-label="Collection prominence score components">
+              <div>
+                <dt>Score</dt>
+                <dd>{selectedScore.toFixed(1)}/100</dd>
+              </div>
+              <div>
+                <dt>Works</dt>
+                <dd>{selectedSummary.featured_artist_n_works.toLocaleString()}</dd>
+              </div>
+              <div>
+                <dt>Breadth</dt>
+                <dd>
+                  {selectedSummary.featured_artist_n_departments} departments · {selectedSummary.featured_artist_n_mediums}
+                  media
+                </dd>
+              </div>
+            </dl>
+          {/if}
           <p class="representative">
             <span>Representative record</span>
             <em>{selectedWorkTitle}</em>
@@ -140,7 +160,12 @@
               <span>{selectedWorkYear}</span>
             {/if}
           </p>
-          <p class="caveat">This is a collection-count proxy, not a fame ranking.</p>
+          <p class="caveat">
+            This is a transparent collection-based proxy, not a true fame ranking.
+            {#if selectedSummary.featured_artist_score_method}
+              {selectedSummary.featured_artist_score_method}
+            {/if}
+          </p>
           {#if selectedArtistUrl}
             <a class="moma-link" href={selectedArtistUrl} target="_blank" rel="noopener">Open artist on MoMA</a>
           {/if}

@@ -207,6 +207,34 @@
   line-height: var(--type-body-line);
 }
 
+.artist-label .score-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-1) 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--fg-on-dark-mute) 28%, transparent);
+}
+
+.artist-label .score-card div {
+  display: block;
+}
+
+.artist-label .score-card dt {
+  color: var(--fg-on-dark-mute);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+  text-transform: uppercase;
+}
+
+.artist-label .score-card dd {
+  margin: 0.125rem 0 0;
+  color: var(--fg-on-dark-strong);
+  font-family: var(--font-mono);
+  font-size: var(--type-small-size);
+  font-variant-numeric: tabular-nums;
+}
+
 .artist-label .representative {
   display: grid;
   gap: 0.125rem;
@@ -289,6 +317,12 @@
     top: auto;
     bottom: var(--space-2);
     width: auto;
+    max-height: calc(100svh - var(--space-4));
+    overflow: auto;
+  }
+
+  .artist-label .score-card {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -340,6 +340,7 @@ def artist_story(
     last_decade: int | None,
     work_title: str | None,
     work_year: int | None,
+    score: float,
 ) -> str:
     """Build a factual collection note without inventing biography."""
     country_phrase = (
@@ -360,9 +361,48 @@ def artist_story(
             work += f" ({work_year})"
         work += "."
     return (
-        f"In this dataset, {artist_name} is the most represented artist credited to {country_phrase}, "
-        f"with {n_works:,} credited works. MoMA's records place this artist mostly in {top_medium}, "
+        f"In this dataset, {artist_name} has the highest collection prominence score for {country_phrase} "
+        f"({score:.1f}/100), with {n_works:,} credited works. MoMA's records place this artist mostly in {top_medium}, "
         f"with works appearing {span}.{work}"
+    )
+
+
+def prominence_table(group: pd.DataFrame) -> pd.DataFrame:
+    """Rank artists within one country using a transparent collection-based proxy."""
+    stats = (
+        group.groupby("artist_id")
+        .agg(
+            artist_name=("artist_name", "first"),
+            n_works=("artwork_id", "count"),
+            n_departments=("department", "nunique"),
+            n_mediums=("medium_group", "nunique"),
+            first_decade=("decade", "min"),
+            last_decade=("decade", "max"),
+            cataloged_share=("cataloged", lambda values: float((values == "Y").mean())),
+            n_on_view=("on_view", lambda values: int(values.notna().sum())),
+            has_wiki=("has_wiki", "max"),
+            has_ulan=("has_ulan", "max"),
+        )
+        .reset_index()
+    )
+    stats["decade_span"] = (stats["last_decade"] - stats["first_decade"]).fillna(0).clip(lower=0)
+    max_works = max(1, int(stats["n_works"].max()))
+    max_departments = max(1, int(stats["n_departments"].max()))
+    max_mediums = max(1, int(stats["n_mediums"].max()))
+    max_on_view = max(1, int(stats["n_on_view"].max()))
+    stats["prominence_score"] = (
+        55 * stats["n_works"].map(lambda value: math.log1p(value) / math.log1p(max_works))
+        + 12 * (stats["n_departments"] / max_departments)
+        + 8 * (stats["n_mediums"] / max_mediums)
+        + 8 * (stats["decade_span"].clip(upper=160) / 160)
+        + 7 * stats["cataloged_share"]
+        + 5 * stats["has_wiki"].astype(int)
+        + 3 * stats["has_ulan"].astype(int)
+        + 2 * (stats["n_on_view"] / max_on_view)
+    ).round(2)
+    return stats.sort_values(
+        ["prominence_score", "n_works", "artist_name"],
+        ascending=[False, False, True],
     )
 
 
@@ -410,6 +450,8 @@ def build_credit_rows(artworks: pd.DataFrame, nationality_to_iso: dict[str, str]
                     "classification": clean_token(getattr(row, "Classification")) or "Unknown",
                     "medium": clean_token(getattr(row, "Medium")) or "Unknown",
                     "medium_group": getattr(row, "medium_group"),
+                    "cataloged": clean_token(getattr(row, "Cataloged")),
+                    "on_view": clean_token(getattr(row, "OnView")),
                     "nationality": nationality,
                     "iso3": iso3,
                     "country_name": ISO3_TO_COUNTRY.get(iso3, iso3) if iso3 else None,
@@ -456,6 +498,10 @@ def main() -> None:
 
     credit_rows = build_credit_rows(artworks, nationality_to_iso, regions)
     credits = pd.DataFrame(credit_rows)
+    wiki_lookup = artists_raw.set_index("ConstituentID")["Wiki QID"].notna().to_dict()
+    ulan_lookup = artists_raw.set_index("ConstituentID")["ULAN"].notna().to_dict()
+    credits["has_wiki"] = credits["artist_id"].map(wiki_lookup).fillna(False)
+    credits["has_ulan"] = credits["artist_id"].map(ulan_lookup).fillna(False)
     n_total = len(artworks)
     n_credits = len(credits)
 
@@ -514,7 +560,9 @@ def main() -> None:
         medium_counter = Counter(group["medium_group"])
         sorted_group = group.sort_values(["artist_name", "title", "year"], na_position="last")
         sample = sorted_group.iloc[seeded_index(str(iso3), len(sorted_group))]
-        featured_artist_id = int(group["artist_id"].value_counts().sort_values(ascending=False).index[0])
+        ranked_artists = prominence_table(group)
+        featured_rank = ranked_artists.iloc[0]
+        featured_artist_id = int(featured_rank["artist_id"])
         featured_group = group[group["artist_id"] == featured_artist_id].sort_values(["year", "title"], na_position="last")
         featured_sample = featured_group.iloc[0]
         featured_medium = Counter(featured_group["medium_group"]).most_common(1)[0][0]
@@ -539,6 +587,17 @@ def main() -> None:
                 "featured_artist_id": featured_artist_id,
                 "featured_artist": featured_sample["artist_name"],
                 "featured_artist_n_works": int(len(featured_group)),
+                "featured_artist_score": float(featured_rank["prominence_score"]),
+                "featured_artist_score_method": (
+                    "Collection prominence score: 55% log work count, 12% department breadth, "
+                    "8% medium breadth, 8% dated decade span, 7% cataloged share, "
+                    "5% Wiki QID, 3% ULAN, 2% currently-on-view records."
+                ),
+                "featured_artist_n_departments": int(featured_rank["n_departments"]),
+                "featured_artist_n_mediums": int(featured_rank["n_mediums"]),
+                "featured_artist_decade_span": int(json_ready(featured_rank["decade_span"]) or 0),
+                "featured_artist_has_wiki": bool(featured_rank["has_wiki"]),
+                "featured_artist_has_ulan": bool(featured_rank["has_ulan"]),
                 "featured_artist_lifespan": lifespan(
                     featured_sample["year_birth"],
                     featured_sample["year_death"],
@@ -558,6 +617,7 @@ def main() -> None:
                     featured_last,
                     featured_sample["title"],
                     featured_work_year,
+                    float(featured_rank["prominence_score"]),
                 ),
             }
         )
