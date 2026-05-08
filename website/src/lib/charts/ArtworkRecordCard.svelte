@@ -6,6 +6,7 @@
   <figcaption>
     <span>Representative artwork record</span>
     <em>{artist.sample_work_title}</em>
+    <p class="rights-note">Image not embedded for copyright safety.</p>
     <dl>
       {#if artist.sample_work_year}
         <div>
@@ -19,9 +20,9 @@
       </div>
     </dl>
     {#if artist.sample_work_url}
-      <a href={artist.sample_work_url} target="_blank" rel="noopener">Open artwork record on MoMA</a>
+      <a class="artwork-link" href={artist.sample_work_url} target="_blank" rel="noopener">View real artwork on MoMA</a>
     {:else}
-      <p>No artwork image is embedded; MoMA records are linked out where available.</p>
+      <p class="missing-link">MoMA artwork record unavailable in this dataset row.</p>
     {/if}
   </figcaption>
 </figure>
@@ -43,7 +44,8 @@
 
   span,
   dt,
-  p {
+  .rights-note,
+  .missing-link {
     margin: 0;
     color: var(--fg-on-dark-mute);
     font-family: var(--font-ui);
@@ -59,6 +61,11 @@
     color: var(--fg-on-dark-strong);
     font-size: clamp(1.4rem, 3vw, var(--type-h2-size));
     line-height: var(--type-h2-line);
+  }
+
+  .rights-note {
+    max-width: 34rem;
+    line-height: var(--type-small-line);
   }
 
   dl {
@@ -77,19 +84,31 @@
     font-size: var(--type-body-size);
   }
 
-  a {
+  .artwork-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: fit-content;
-    margin-top: var(--space-1);
-    border-bottom: 1px solid currentColor;
+    margin-top: var(--space-2);
+    border: 1px solid var(--accent-primary);
+    padding: var(--space-1) var(--space-2);
     color: var(--fg-on-dark-strong);
+    background: color-mix(in srgb, var(--accent-primary) 18%, transparent);
     font-family: var(--font-ui);
-    font-size: var(--type-small-size);
+    font-size: var(--type-body-size);
+    font-weight: 600;
     text-decoration: none;
+    transition:
+      color var(--duration-tooltip-in) var(--ease-out),
+      background-color var(--duration-tooltip-in) var(--ease-out),
+      transform var(--duration-tooltip-in) var(--ease-out);
   }
 
-  a:hover,
-  a:focus-visible {
-    color: var(--accent-primary);
+  .artwork-link:hover,
+  .artwork-link:focus-visible {
+    color: var(--bg-dark);
+    background: var(--accent-primary);
+    transform: translateY(-1px);
   }
 
   @media (max-width: 520px) {
