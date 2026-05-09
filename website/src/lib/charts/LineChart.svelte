@@ -16,10 +16,20 @@
   $: range = $filters.decadeRange;
   $: x = scaleLinear().domain([1860, 2020]).range([0, innerWidth]);
   $: y = scaleLinear().domain([0, 0.6]).range([innerHeight, 0]);
+  $: pointByDecade = new Map(data.map((d) => [d.decade, d]));
   $: pathD = line()
     .x((d) => x(d.decade))
     .y((d) => y(d.femaleShare))(data);
   $: areaD = `${pathD || ''} L ${x(data.at(-1)?.decade ?? 2020)} ${innerHeight} L ${x(data[0]?.decade ?? 1860)} ${innerHeight} Z`;
+  $: plottedAnnotations = annotations.map(positionAnnotation).filter(Boolean);
+
+  function positionAnnotation(note) {
+    if (Number.isFinite(note.x) && Number.isFinite(note.y)) return note;
+    const point = pointByDecade.get(note.decade);
+    const share = Number.isFinite(note.femaleShare) ? note.femaleShare : point?.femaleShare;
+    if (!Number.isFinite(note.decade) || !Number.isFinite(share)) return null;
+    return { ...note, x: x(note.decade), y: y(share) };
+  }
 
   function showTooltip(event, d) {
     window.dispatchEvent(
@@ -59,6 +69,9 @@
       />
       <path class="area" d={areaD} />
       <path class="series draw" d={pathD} />
+      {#each plottedAnnotations as note}
+        <Annotation {...note} />
+      {/each}
       {#each data as d}
         <circle
           cx={x(d.decade)}
@@ -76,9 +89,6 @@
       {/each}
       <text class="axis-title y" x={-innerHeight / 2} y="-42">female-credited share</text>
       <text class="axis-title x" x={innerWidth / 2} y={innerHeight + 46}>artwork decade</text>
-      {#each annotations as note}
-        <Annotation {...note} />
-      {/each}
     </g>
   </svg>
   <table class="sr-only">

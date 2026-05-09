@@ -25,17 +25,38 @@
   let lineData = $derived(toLineData(lineRows));
   let latest = $derived([...lineData].reverse().find((d) => d.n > 0) ?? { femaleShare: 0, decade: 2020, n: 0 });
   let annotations = $derived([
-    { x: 210, y: 80, dx: -110, dy: -35, value: '1910s', label: 'brief opening in the early collection.', width: 180 },
-    { x: 300, y: 108, dx: -80, dy: 58, value: '1930s', label: 'another spike, then a long plateau.', width: 185 },
-    { x: 535, y: 170, dx: 48, dy: -72, value: '1980s', label: 'sustained rise begins.', width: 165 },
     {
-      x: 685,
-      y: 112,
-      dx: -150,
-      dy: -82,
+      decade: 1910,
+      dx: -118,
+      dy: -105,
+      value: '1910s',
+      label: 'brief opening in the early collection.',
+      width: 185,
+    },
+    {
+      decade: 1930,
+      dx: -76,
+      dy: -78,
+      value: '1930s',
+      label: 'another spike, then a long plateau.',
+      width: 190,
+    },
+    {
+      decade: 1990,
+      dx: 42,
+      dy: 82,
+      value: '1980s',
+      label: 'sustained rise begins.',
+      width: 160,
+    },
+    {
+      decade: latest.decade,
+      dx: -134,
+      dy: -76,
       value: `${(latest.femaleShare * 100).toFixed(0)}%`,
       label: `in the ${latest.decade}s.`,
-      width: 150,
+      width: 140,
+      emphasis: 'strong',
     },
   ]);
 
