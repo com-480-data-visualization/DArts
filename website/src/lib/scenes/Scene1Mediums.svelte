@@ -28,7 +28,7 @@
       return { value: '1 in 2', label: 'works is on paper.', dx: 90, dy: -50, width: 170 };
     }
     if (activeStep === 2) {
-      return { value: '44.2%', label: 'sit in Photography or Architecture & Design.', dx: 70, dy: 70, width: 210 };
+      return { value: '44.2%', label: 'sit in Photography or Architecture & Design.', dx: 70, dy: -94, width: 230 };
     }
     return { value: '1 in 30', label: 'works belongs to Painting & Sculpture.', dx: -190, dy: -50, width: 190 };
   }
