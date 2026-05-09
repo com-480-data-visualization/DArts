@@ -23,7 +23,7 @@
   $: annotationPoint = getAnnotationPoint(annotation, annotationLeaf);
 
   function getAnnotationPoint(note, leaf) {
-    if (!note || lockedMedium) return null;
+    if (!note) return null;
     if (Number.isFinite(note.x) && Number.isFinite(note.y)) return { x: note.x, y: note.y };
     if (leaf) return { x: (leaf.x0 + leaf.x1) / 2, y: (leaf.y0 + leaf.y1) / 2 };
     return null;
