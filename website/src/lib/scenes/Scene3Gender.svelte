@@ -27,19 +27,19 @@
   let annotations = $derived([
     {
       decade: 1910,
-      dx: -118,
-      dy: -105,
+      dx: -140,
+      dy: -96,
       value: '1910s',
       label: 'brief opening in the early collection.',
-      width: 185,
+      width: 165,
     },
     {
       decade: 1930,
-      dx: -76,
-      dy: -78,
+      dx: 34,
+      dy: -104,
       value: '1930s',
       label: 'another spike, then a long plateau.',
-      width: 190,
+      width: 170,
     },
     {
       decade: 1990,
