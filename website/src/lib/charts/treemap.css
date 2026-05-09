@@ -1,0 +1,93 @@
+.treemap {
+  margin: 0;
+  width: 100%;
+}
+
+.treemap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  padding: var(--space-1);
+  background: var(--bg-paper);
+  border: 1px solid var(--rule-on-light);
+}
+
+.treemap .mark {
+  fill: var(--seq-1);
+  stroke: var(--bg-light);
+  stroke-width: 1;
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: grow-leaf 900ms var(--ease-out) both;
+  animation-delay: calc(var(--rank) * 35ms);
+  transition: fill var(--duration-tooltip-in) var(--ease-out);
+}
+
+.treemap .mark.highlight {
+  fill: var(--accent-primary);
+}
+
+.treemap .mark:hover,
+.treemap .mark:focus-visible {
+  fill: var(--seq-2);
+  outline: none;
+}
+
+.treemap .mark.highlight:hover,
+.treemap .mark.highlight:focus-visible {
+  fill: var(--accent-primary);
+}
+
+.treemap .inner-frame,
+.treemap .motif {
+  pointer-events: none;
+}
+
+.treemap .inner-frame {
+  fill: none;
+  stroke: color-mix(in srgb, var(--fg-on-light-strong) 20%, transparent);
+  stroke-width: 1;
+}
+
+.treemap .motif line {
+  stroke: color-mix(in srgb, var(--fg-on-light-strong) 16%, transparent);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.treemap .leaf:has(.mark.highlight) .motif line,
+.treemap .leaf:has(.mark.highlight) .inner-frame {
+  stroke: color-mix(in srgb, var(--fg-on-dark-strong) 42%, transparent);
+}
+
+.treemap text {
+  fill: var(--fg-on-light-strong);
+  font-family: var(--font-ui);
+  font-size: var(--type-small-size);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.treemap tspan + tspan {
+  fill: var(--fg-on-light-mute);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes grow-leaf {
+  from {
+    scale: 0;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .treemap rect {
+    animation: none;
+    transition: none;
+  }
+}

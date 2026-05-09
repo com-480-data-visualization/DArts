@@ -1,6 +1,7 @@
 <script>
   import { hierarchy, treemap, treemapSquarify } from 'd3-hierarchy';
   import Annotation from '../components/Annotation.svelte';
+  import './treemap.css';
 
   export let data = [];
   export let highlighted = [];
@@ -18,7 +19,15 @@
   $: layout = treemap().size([width, height]).paddingInner(1).tile(treemapSquarify)(root);
   $: leaves = layout.leaves().map((leaf, index) => ({ ...leaf, rank: index }));
   $: activeSet = new Set(lockedMedium ? [lockedMedium] : highlighted);
-  $: activeLeaf = leaves.find((leaf) => activeSet.has(leaf.data.medium));
+  $: annotationLeaf = annotation?.medium ? leaves.find((leaf) => leaf.data.medium === annotation.medium) : null;
+  $: annotationPoint = getAnnotationPoint(annotation, annotationLeaf);
+
+  function getAnnotationPoint(note, leaf) {
+    if (!note || lockedMedium) return null;
+    if (Number.isFinite(note.x) && Number.isFinite(note.y)) return { x: note.x, y: note.y };
+    if (leaf) return { x: (leaf.x0 + leaf.x1) / 2, y: (leaf.y0 + leaf.y1) / 2 };
+    return null;
+  }
 
   function showTooltip(event, leaf) {
     const pct = Number(leaf.data.pct).toFixed(1);
@@ -122,15 +131,15 @@
         {/if}
       </g>
     {/each}
-    {#if activeLeaf && annotation}
+    {#if annotation && annotationPoint}
       <Annotation
-        x={(activeLeaf.x0 + activeLeaf.x1) / 2}
-        y={(activeLeaf.y0 + activeLeaf.y1) / 2}
+        x={annotationPoint.x}
+        y={annotationPoint.y}
         dx={annotation.dx}
         dy={annotation.dy}
         value={annotation.value}
         label={annotation.label}
-        emphasis="strong"
+        emphasis={annotation.emphasis ?? 'strong'}
         width={annotation.width}
       />
     {/if}
@@ -147,99 +156,3 @@
     </tbody>
   </table>
 </figure>
-
-<style>
-  .treemap {
-    margin: 0;
-    width: 100%;
-  }
-
-  svg {
-    width: 100%;
-    height: auto;
-    display: block;
-    padding: var(--space-1);
-    background: var(--bg-paper);
-    border: 1px solid var(--rule-on-light);
-  }
-
-  .mark {
-    fill: var(--seq-1);
-    stroke: var(--bg-light);
-    stroke-width: 1;
-    cursor: pointer;
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: grow-leaf 900ms var(--ease-out) both;
-    animation-delay: calc(var(--rank) * 35ms);
-    transition: fill var(--duration-tooltip-in) var(--ease-out);
-  }
-
-  .mark.highlight {
-    fill: var(--accent-primary);
-  }
-
-  .mark:hover,
-  .mark:focus-visible {
-    fill: var(--seq-2);
-    outline: none;
-  }
-
-  .mark.highlight:hover,
-  .mark.highlight:focus-visible {
-    fill: var(--accent-primary);
-  }
-
-  .inner-frame,
-  .motif {
-    pointer-events: none;
-  }
-
-  .inner-frame {
-    fill: none;
-    stroke: color-mix(in srgb, var(--fg-on-light-strong) 20%, transparent);
-    stroke-width: 1;
-  }
-
-  .motif line {
-    stroke: color-mix(in srgb, var(--fg-on-light-strong) 16%, transparent);
-    stroke-width: 1.2;
-    stroke-linecap: round;
-  }
-
-  .leaf:has(.mark.highlight) .motif line,
-  .leaf:has(.mark.highlight) .inner-frame {
-    stroke: color-mix(in srgb, var(--fg-on-dark-strong) 42%, transparent);
-  }
-
-  text {
-    fill: var(--fg-on-light-strong);
-    font-family: var(--font-ui);
-    font-size: var(--type-small-size);
-    font-weight: 600;
-    pointer-events: none;
-  }
-
-  tspan + tspan {
-    fill: var(--fg-on-light-mute);
-    font-family: var(--font-mono);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
-
-  @keyframes grow-leaf {
-    from {
-      scale: 0;
-    }
-    to {
-      scale: 1;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    rect {
-      animation: none;
-      transition: none;
-    }
-  }
-</style>

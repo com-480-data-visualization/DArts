@@ -22,15 +22,39 @@
 
   function stepAnnotation(activeStep) {
     if (activeStep === 0) {
-      return { value: '144,149', label: 'cleaned works anchor the analysis.', dx: 80, dy: -70, width: 190 };
+      return {
+        x: 150,
+        y: 120,
+        dx: 110,
+        dy: 64,
+        value: '144,149',
+        label: 'cleaned works anchor the analysis.',
+        width: 205,
+      };
     }
     if (activeStep === 1) {
-      return { value: '1 in 2', label: 'works is on paper.', dx: 90, dy: -50, width: 170 };
+      return { x: 360, y: 214, dx: 86, dy: -86, value: '1 in 2', label: 'works is on paper.', width: 170 };
     }
     if (activeStep === 2) {
-      return { value: '44.2%', label: 'sit in Photography or Architecture & Design.', dx: 70, dy: -94, width: 230 };
+      return {
+        x: 260,
+        y: 508,
+        dx: 170,
+        dy: -70,
+        value: '44.2%',
+        label: 'sit in Photography or Architecture & Design.',
+        width: 245,
+      };
     }
-    return { value: '1 in 30', label: 'works belongs to Painting & Sculpture.', dx: -190, dy: -50, width: 190 };
+    return {
+      x: 608,
+      y: 504,
+      dx: -244,
+      dy: -94,
+      value: '1 in 30',
+      label: 'works belongs to Painting & Sculpture.',
+      width: 210,
+    };
   }
 </script>
 
