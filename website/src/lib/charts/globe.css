@@ -1,0 +1,57 @@
+.globe-figure {
+  margin: 0;
+  width: min(90vh, 100%);
+}
+
+.globe-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.globe-figure .sphere {
+  fill: var(--bg-dark);
+  stroke: var(--fg-on-dark-mute);
+  stroke-width: 0.5;
+  opacity: 0.9;
+}
+
+.globe-figure .graticule {
+  fill: none;
+  stroke: var(--fg-on-dark-mute);
+  stroke-width: 0.35;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.globe-figure .countries {
+  cursor: grab;
+}
+
+.globe-figure .countries.dragging {
+  cursor: grabbing;
+}
+
+.globe-figure path {
+  stroke: var(--bg-dark);
+  stroke-width: 0.35;
+  transition:
+    fill 450ms var(--ease-inout),
+    stroke 180ms var(--ease-out);
+}
+
+.globe-figure path.clickable {
+  cursor: pointer;
+}
+
+.globe-figure path.clickable:hover,
+.globe-figure path.selected {
+  stroke: var(--fg-on-dark-strong);
+  stroke-width: 1.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .globe-figure path {
+    transition: none;
+  }
+}

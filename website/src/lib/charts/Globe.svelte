@@ -5,22 +5,37 @@
   import { feature } from 'topojson-client';
   import { worldAtlasIdToIso3 } from '../data/worldIso3.js';
   import { filters, setSelectedCountry } from '../stores/filters.js';
+  import {
+    closestRotationStart,
+    easeInOutCubic,
+    buildIsoCounts,
+    globeFillFor,
+    IDLE_DEGREES_PER_MS,
+    IDLE_RESUME_DELAY,
+    TOP_THREE_HOLD_DELAY,
+    TOP_THREE_ROTATION,
+  } from '../utils/globeMotion.js';
+  import './globe.css';
 
-  let { countryByDecade = [], step = 0 } = $props();
+  let { countryByDecade = [], step = 0, active = false } = $props();
 
   const width = 760;
   const height = 760;
-  const topThree = new Set(['USA', 'FRA', 'DEU']);
 
   let countries = $state([]);
   let rotation = $state([-35, -20]);
   let dragging = $state(false);
+  let scripted = $state(false);
   let dragStart = null;
   let rotateStart = null;
   let pointerDownCountryIndex = null;
   let pointerMoved = false;
-  let frame = 0;
-  let reduceMotion = false;
+  let motionFrame = 0;
+  let idleFrame = 0;
+  let idleLast = 0;
+  let idlePausedUntil = 0;
+  let lastFocusedStep = -1;
+  let reduceMotion = $state(false);
 
   let projection = $derived(
     geoOrthographic()
@@ -33,26 +48,8 @@
   let graticulePath = $derived(path(geoGraticule10()));
   let range = $derived($filters.decadeRange);
   let selectedCountry = $derived($filters.selectedCountry);
-  let countByIso = $derived(buildCounts(countryByDecade, range));
+  let countByIso = $derived(buildIsoCounts(countryByDecade, range));
   let maxCount = $derived(Math.max(1, ...Object.values(countByIso)));
-
-  function buildCounts(rows, decadeRange) {
-    const counts = {};
-    for (const row of rows) {
-      if (row.decade === null || row.decade < decadeRange[0] || row.decade > decadeRange[1]) continue;
-      counts[row.iso3] = (counts[row.iso3] || 0) + row.n;
-    }
-    return counts;
-  }
-
-  function fillFor(iso3) {
-    const n = countByIso[iso3] || 0;
-    if (n === 0) return 'transparent';
-    if (step >= 2 && topThree.has(iso3)) return 'var(--accent-primary)';
-    if (step === 0) return 'var(--seq-0)';
-    const bucket = Math.min(4, Math.max(0, Math.floor((Math.log10(n) / Math.log10(maxCount)) * 4)));
-    return `var(--seq-${bucket})`;
-  }
 
   function showTooltip(event, country) {
     const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')];
@@ -73,8 +70,64 @@
     window.dispatchEvent(new CustomEvent('darts:tooltip-hide'));
   }
 
-  function ease(t) {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function pauseIdle(duration = IDLE_RESUME_DELAY) {
+    idlePausedUntil = performance.now() + duration;
+    idleLast = 0;
+  }
+
+  function cancelMotion() {
+    cancelAnimationFrame(motionFrame);
+    motionFrame = 0;
+    scripted = false;
+  }
+
+  function animateRotationTo(target, duration = 900, holdDelay = 0) {
+    pauseIdle(duration + holdDelay);
+    cancelMotion();
+    if (reduceMotion) {
+      rotation = target;
+      return;
+    }
+    scripted = true;
+    const start = closestRotationStart(rotation, target);
+    const interp = interpolate(start, target);
+    const started = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - started) / duration);
+      rotation = interp(easeInOutCubic(t));
+      if (t < 1) {
+        motionFrame = requestAnimationFrame(tick);
+      } else {
+        rotation = target;
+        scripted = false;
+        motionFrame = 0;
+      }
+    };
+    motionFrame = requestAnimationFrame(tick);
+  }
+
+  function startIdleLoop() {
+    if (idleFrame || reduceMotion) return;
+    idleFrame = requestAnimationFrame(idleTick);
+  }
+
+  function stopIdleLoop() {
+    cancelAnimationFrame(idleFrame);
+    idleFrame = 0;
+    idleLast = 0;
+  }
+
+  function idleTick(now) {
+    idleFrame = requestAnimationFrame(idleTick);
+    if (!active || reduceMotion) return;
+    const elapsed = idleLast ? Math.min(40, now - idleLast) : 0;
+    idleLast = now;
+    if (!elapsed || dragging || scripted || selectedCountry || now < idlePausedUntil) return;
+    rotation = [rotation[0] + elapsed * IDLE_DEGREES_PER_MS, rotation[1]];
+  }
+
+  function focusTopThreeCountries() {
+    animateRotationTo(TOP_THREE_ROTATION, 900, TOP_THREE_HOLD_DELAY);
   }
 
   function centerCountry(country) {
@@ -83,23 +136,12 @@
     setSelectedCountry(iso3);
     const [lon, lat] = geoCentroid(country);
     const target = [-lon, -lat];
-    if (reduceMotion) {
-      rotation = target;
-      return;
-    }
-    const start = rotation;
-    const interp = interpolate(start, target);
-    const started = performance.now();
-    cancelAnimationFrame(frame);
-    const tick = (now) => {
-      const t = Math.min(1, (now - started) / 900);
-      rotation = interp(ease(t));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
+    animateRotationTo(target, 900, IDLE_RESUME_DELAY);
   }
 
   function onPointerDown(event) {
+    cancelMotion();
+    pauseIdle();
     dragging = true;
     dragStart = [event.clientX, event.clientY];
     rotateStart = rotation;
@@ -123,8 +165,22 @@
     pointerDownCountryIndex = null;
     if (event.currentTarget.hasPointerCapture?.(event.pointerId))
       event.currentTarget.releasePointerCapture(event.pointerId);
+    pauseIdle();
     if (shouldSelect) centerCountry(countries[Number(countryIndex)]);
   }
+
+  $effect(() => {
+    if (active && !reduceMotion) {
+      startIdleLoop();
+    } else {
+      stopIdleLoop();
+    }
+  });
+
+  $effect(() => {
+    if (active && step === 2 && lastFocusedStep !== 2 && !selectedCountry) focusTopThreeCountries();
+    lastFocusedStep = step;
+  });
 
   onMount(async () => {
     reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -133,7 +189,10 @@
     countries = feature(topology, topology.objects.countries).features;
   });
 
-  onDestroy(() => cancelAnimationFrame(frame));
+  onDestroy(() => {
+    cancelMotion();
+    stopIdleLoop();
+  });
 </script>
 
 <figure class="globe-figure" aria-label="Orthographic globe showing credited works by artist country">
@@ -167,7 +226,7 @@
           d={path(country)}
           data-country-index={index}
           data-iso3={iso3}
-          fill={fillFor(iso3)}
+          fill={globeFillFor(iso3, countByIso[iso3] || 0, maxCount, step)}
           class:selected={selectedCountry === iso3}
           class:clickable={Boolean(iso3 && countByIso[iso3])}
           onpointermove={(event) => showTooltip(event, country)}
@@ -187,63 +246,3 @@
     </g>
   </svg>
 </figure>
-
-<style>
-  .globe-figure {
-    margin: 0;
-    width: min(90vh, 100%);
-  }
-
-  svg {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .sphere {
-    fill: var(--bg-dark);
-    stroke: var(--fg-on-dark-mute);
-    stroke-width: 0.5;
-    opacity: 0.9;
-  }
-
-  .graticule {
-    fill: none;
-    stroke: var(--fg-on-dark-mute);
-    stroke-width: 0.35;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-
-  .countries {
-    cursor: grab;
-  }
-
-  .countries.dragging {
-    cursor: grabbing;
-  }
-
-  path {
-    stroke: var(--bg-dark);
-    stroke-width: 0.35;
-    transition:
-      fill 450ms var(--ease-inout),
-      stroke 180ms var(--ease-out);
-  }
-
-  path.clickable {
-    cursor: pointer;
-  }
-
-  path.clickable:hover,
-  path.selected {
-    stroke: var(--fg-on-dark-strong);
-    stroke-width: 1.2;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    path {
-      transition: none;
-    }
-  }
-</style>

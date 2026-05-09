@@ -12,7 +12,8 @@
 
   const topThree = new Set(['USA', 'FRA', 'DEU']);
 
-  let step = $derived($filters.activeScene === 2 ? $filters.activeStep : 0);
+  let active = $derived($filters.activeScene === 2);
+  let step = $derived(active ? $filters.activeStep : 0);
   let range = $derived($filters.decadeRange);
   let selectedCountry = $derived($filters.selectedCountry);
   let summaryByIso = $derived(new Map(countrySummary.map((d) => [d.iso3, d])));
@@ -94,7 +95,7 @@
       {/if}
     </div>
     <div class="globe-wrap">
-      <Globe {countryByDecade} {step} />
+      <Globe {countryByDecade} {step} {active} />
     </div>
     {#if selectedSummary}
       <aside class="country-panel" aria-label={`Selected country ${selectedSummary.country_name}`}>
