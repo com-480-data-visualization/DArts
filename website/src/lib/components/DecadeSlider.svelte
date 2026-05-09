@@ -1,9 +1,11 @@
 <script>
   import { onDestroy } from 'svelte';
   import { DECADE_MAX, DECADE_MIN, filters, setDecadeRange, syncToHash } from '../stores/filters.js';
+  import './decadeSlider.css';
 
   export let timeline = [];
   export let ariaLabel = 'Filter by decade range';
+  export let dark = false;
 
   const STEP = 10;
   const LARGE_STEP = 50;
@@ -78,14 +80,17 @@
   });
 </script>
 
-<div class="decade-slider" aria-label={ariaLabel}>
-  <div class="slider-values type-mono">
-    <span>{minDecade}</span>
-    <span>{maxDecade}</span>
+<div class="decade-slider" class:dark aria-label={ariaLabel}>
+  <div class="slider-header">
+    <span>Decade range</span>
+    <strong>{minDecade}-{maxDecade}</strong>
   </div>
   <div class="sparkline" aria-hidden="true">
     {#each decades as decade}
-      <span style:height={`${((countByDecade.get(decade) ?? 0) / maxCount) * 100}%`}></span>
+      <span
+        class:selected={decade >= minDecade && decade <= maxDecade}
+        style:height={`${((countByDecade.get(decade) ?? 0) / maxCount) * 100}%`}
+      ></span>
     {/each}
   </div>
   <div class="track" bind:this={track}>
@@ -130,104 +135,3 @@
     </button>
   </div>
 </div>
-
-<style>
-  .decade-slider {
-    display: grid;
-    gap: var(--space-1);
-    width: 100%;
-    font-family: var(--font-ui);
-  }
-
-  .slider-values {
-    display: flex;
-    justify-content: space-between;
-    color: var(--fg-on-light-strong);
-  }
-
-  .sparkline {
-    display: flex;
-    align-items: end;
-    height: 2rem;
-    gap: 0.125rem;
-  }
-
-  .sparkline span {
-    flex: 1;
-    min-height: 0.125rem;
-    background: color-mix(in srgb, var(--fg-on-light-mute) 30%, transparent);
-  }
-
-  .track {
-    position: relative;
-    height: 3rem;
-    touch-action: none;
-  }
-
-  .track-base,
-  .track-fill {
-    position: absolute;
-    top: 0.75rem;
-    height: 0.125rem;
-  }
-
-  .track-base {
-    inset-inline: 0;
-    background: var(--rule-on-light);
-  }
-
-  .track-fill {
-    background: var(--accent-primary);
-  }
-
-  .tick {
-    position: absolute;
-    top: 0.5rem;
-    width: 1px;
-    height: 0.625rem;
-    background: var(--rule-on-light);
-  }
-
-  .tick.major {
-    height: 0.875rem;
-  }
-
-  .tick span {
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-    translate: -50% 0;
-    color: var(--fg-on-light-mute);
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .thumb {
-    position: absolute;
-    top: 0.75rem;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid var(--accent-primary);
-    background: var(--bg-paper);
-    translate: -50% -45%;
-    cursor: grab;
-  }
-
-  .thumb.active {
-    cursor: grabbing;
-  }
-
-  .thumb span {
-    position: absolute;
-    bottom: calc(100% + 0.25rem);
-    left: 50%;
-    translate: -50% 0;
-    padding: 0 0.125rem;
-    color: var(--fg-on-light-strong);
-    background: var(--bg-paper);
-    font-family: var(--font-mono);
-    font-size: var(--type-small-size);
-    font-variant-numeric: tabular-nums;
-  }
-</style>
