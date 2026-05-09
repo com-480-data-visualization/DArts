@@ -1,7 +1,5 @@
 <script>
   import { onMount } from 'svelte';
-  import ComponentDemo from './lib/components/ComponentDemo.svelte';
-  import FilterStoreDebug from './lib/components/FilterStoreDebug.svelte';
   import Tooltip from './lib/components/Tooltip.svelte';
   import Scene0Hero from './lib/scenes/Scene0Hero.svelte';
   import { initFilterHashSync } from './lib/stores/filters.js';
@@ -16,8 +14,6 @@
   let genderByCountry = $state([]);
   let mediumBreakdown = $state([]);
   let sceneModules = $state(null);
-  let showFilterDebug = $state(false);
-  let showComponentDemo = $state(false);
 
   function deferStoryLoad(callback) {
     let done = false;
@@ -41,8 +37,6 @@
 
   onMount(() => {
     const stopHashSync = initFilterHashSync();
-    showFilterDebug = import.meta.env.DEV && window.location.pathname.endsWith('/filters');
-    showComponentDemo = import.meta.env.DEV && window.location.pathname.endsWith('/components');
     let cancelled = false;
     const files = [
       'gender_by_decade',
@@ -104,13 +98,7 @@
 
 <Tooltip />
 
-{#if showFilterDebug}
-  <FilterStoreDebug />
-{/if}
-
-{#if showComponentDemo}
-  <ComponentDemo />
-{:else if summary}
+{#if summary}
   <main>
     <Scene0Hero {summary} />
     {#if sceneModules}
