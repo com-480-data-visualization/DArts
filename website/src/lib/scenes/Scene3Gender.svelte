@@ -43,8 +43,8 @@
     },
     {
       decade: 1990,
-      dx: 42,
-      dy: 82,
+      dx: -36,
+      dy: 84,
       value: '1980s',
       label: 'sustained rise begins.',
       width: 160,

@@ -12,7 +12,7 @@
 <g class="annotation" class:strong={emphasis === 'strong'}>
   <line x1={x} y1={y} x2={x + dx} y2={y + dy} />
   <circle cx={x} cy={y} r="3" />
-  <foreignObject x={x + dx} y={y + dy - 20} {width} height="120">
+  <foreignObject x={x + dx - 4} y={y + dy - 24} width={width + 8} height="124">
     <div class="note">
       {#if value}
         <span class="value">{value}</span>
@@ -41,7 +41,11 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0.125rem 0.25rem 0.25rem;
     color: currentColor;
+    background: color-mix(in srgb, var(--bg-paper) 94%, transparent);
     font-family: var(--font-body);
     font-size: var(--type-small-size);
     line-height: var(--type-small-line);
