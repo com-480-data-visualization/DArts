@@ -49,12 +49,17 @@
 }
 
 .scene-globe .exclusion,
+.scene-globe .interaction-hint,
 .scene-globe .share {
   margin: var(--space-1) 0 0;
   color: var(--fg-on-dark-mute);
   font-family: var(--font-ui);
   font-size: var(--type-small-size);
   line-height: var(--type-small-line);
+}
+
+.scene-globe .interaction-hint {
+  color: var(--fg-on-dark-strong);
 }
 
 .scene-globe .slider-panel {

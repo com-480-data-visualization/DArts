@@ -78,7 +78,6 @@
 
 <figure class="treemap" aria-label="Treemap of MoMA collection areas by number of works">
   <svg viewBox={`0 0 ${width} ${height}`}>
-    <title>Treemap of MoMA collection areas by number of works</title>
     <defs>
       {#each leaves as leaf}
         <clipPath id={`leaf-clip-${leaf.rank}`}>

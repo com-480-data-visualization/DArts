@@ -17,7 +17,9 @@
     <b class="artist" style:width={`${pct}%`}></b>
     <em class="type-mono">{artistCount.toLocaleString()}</em>
   </div>
-  <figcaption><strong>Picasso has 1,242 works in the collection.</strong> This artist has {artistCount}.</figcaption>
+  <figcaption>
+    <strong>Picasso is the high-count reference point: 1,242 works.</strong> This artist has {artistCount}.
+  </figcaption>
 </figure>
 
 <style>

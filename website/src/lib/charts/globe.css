@@ -7,6 +7,11 @@
   display: block;
   width: 100%;
   height: auto;
+  cursor: grab;
+}
+
+.globe-figure svg.dragging {
+  cursor: grabbing;
 }
 
 .globe-figure .sphere {
@@ -14,6 +19,7 @@
   stroke: var(--fg-on-dark-mute);
   stroke-width: 0.5;
   opacity: 0.9;
+  pointer-events: all;
 }
 
 .globe-figure .graticule {
@@ -22,14 +28,6 @@
   stroke-width: 0.35;
   opacity: 0.35;
   pointer-events: none;
-}
-
-.globe-figure .countries {
-  cursor: grab;
-}
-
-.globe-figure .countries.dragging {
-  cursor: grabbing;
 }
 
 .globe-figure path {

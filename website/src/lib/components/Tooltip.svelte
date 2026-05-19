@@ -8,12 +8,14 @@
   let y = $state(0);
   let content = $state('');
   let placement = $state('right');
+  let verticalPlacement = $state('above');
 
   function positionTooltip(detail) {
     x = detail.x ?? 0;
     y = detail.y ?? 0;
     content = detail.content ?? '';
     placement = x > window.innerWidth - EDGE_GUARD ? 'left' : 'right';
+    verticalPlacement = y < 140 ? 'below' : 'above';
     visible = Boolean(content);
   }
 
@@ -40,6 +42,7 @@
   class="tooltip"
   class:is-visible={visible}
   class:left={placement === 'left'}
+  class:below={verticalPlacement === 'below'}
   style:transform={`translate(${x}px, ${y}px)`}
   role="status"
   aria-live="polite"
@@ -63,12 +66,20 @@
     line-height: var(--type-small-line);
     opacity: 0;
     pointer-events: none;
-    translate: var(--space-2) calc(-1 * var(--space-2));
+    translate: var(--space-2) calc(-100% - var(--space-1));
     transition: opacity var(--duration-tooltip-out) var(--ease-out);
   }
 
   .tooltip.left {
-    translate: calc(-100% - var(--space-2)) calc(-1 * var(--space-2));
+    translate: calc(-100% - var(--space-2)) calc(-100% - var(--space-1));
+  }
+
+  .tooltip.below {
+    translate: var(--space-2) var(--space-2);
+  }
+
+  .tooltip.left.below {
+    translate: calc(-100% - var(--space-2)) var(--space-2);
   }
 
   .tooltip.is-visible {

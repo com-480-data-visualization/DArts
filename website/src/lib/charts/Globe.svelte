@@ -54,7 +54,7 @@
   function showTooltip(event, country) {
     const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')];
     const count = countByIso[iso3] || 0;
-    if (!iso3 || count === 0) return;
+    if (!iso3) return;
     window.dispatchEvent(
       new CustomEvent('darts:tooltip', {
         detail: {
@@ -196,8 +196,16 @@
 </script>
 
 <figure class="globe-figure" aria-label="Orthographic globe showing credited works by artist country">
-  <svg viewBox={`0 0 ${width} ${height}`}>
-    <title>Orthographic globe of credited works by artist country</title>
+  <svg
+    viewBox={`0 0 ${width} ${height}`}
+    class:dragging
+    role="application"
+    aria-label="Drag anywhere on the globe to rotate it"
+    onpointerdown={onPointerDown}
+    onpointermove={onPointerMove}
+    onpointerup={onPointerUp}
+    onpointercancel={onPointerUp}
+  >
     <defs>
       <filter id="globe-rim" x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
@@ -210,16 +218,7 @@
     </defs>
     <circle class="sphere" cx={width / 2} cy={height / 2} r="350" filter="url(#globe-rim)" />
     <path class="graticule" d={graticulePath} />
-    <g
-      class="countries"
-      class:dragging
-      role="application"
-      aria-label="Drag to rotate the globe"
-      onpointerdown={onPointerDown}
-      onpointermove={onPointerMove}
-      onpointerup={onPointerUp}
-      onpointercancel={onPointerUp}
-    >
+    <g class="countries">
       {#each countries as country, index}
         {@const iso3 = worldAtlasIdToIso3[String(country.id).padStart(3, '0')]}
         <path

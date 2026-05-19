@@ -28,7 +28,7 @@
         dx: 110,
         dy: 64,
         value: '144,149',
-        label: 'cleaned works anchor the analysis.',
+        label: 'works remain after cleaning and link to an artist record.',
         width: 205,
       };
     }
@@ -64,11 +64,11 @@
       <SceneTitle
         kicker="Scene 1"
         title="What MoMA actually collects isn't what you think."
-        subline="Area encodes works in each collection area; one color pop-out carries the active claim."
+        subline="Area encodes works by curatorial department. The next scenes break those records down by origin, gender, and medium."
       />
       {#if lockedMedium}
         <div class="lock-row">
-          <FilterChip label="Locked" value={lockedMedium} onRemove={() => (lockedMedium = '')} />
+          <FilterChip label="Selected" value={lockedMedium} onRemove={() => (lockedMedium = '')} />
         </div>
       {/if}
       <Treemap {data} {highlighted} {annotation} {lockedMedium} onLock={(medium) => (lockedMedium = medium)} />
@@ -79,8 +79,8 @@
     <div class="text-rail">
       <ScrollStep scene={1} step={0}>
         <p>
-          Start with the whole collection. The first surprise is not geography or gender; it is the shape of the archive
-          itself.
+          Start with the whole collection. These departments are the entry point into MoMA's recorded mediums: paper,
+          photography, design objects, paintings, sculpture, film, and everything that sits between them.
         </p>
       </ScrollStep>
       <ScrollStep scene={1} step={1}>

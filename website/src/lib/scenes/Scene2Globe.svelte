@@ -87,6 +87,9 @@
         dark
       />
       <p class="exclusion">Excluded: 2.3% of artist credits have no mapped nationality in the cleaned corpus.</p>
+      <p class="interaction-hint">
+        Drag anywhere on the globe. Click a country to open an artist suggestion from its records.
+      </p>
       {#if step >= 3}
         <div class="slider-panel">
           <DecadeSlider {timeline} ariaLabel="Filter globe by decade range" dark />

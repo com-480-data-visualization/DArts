@@ -55,6 +55,8 @@
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={`${panel.department} female share trend`}>
         <line class="parity" x1={margin.left} x2={width - margin.right} y1={y(0.5)} y2={y(0.5)} />
         <path d={pathFor(panel.series)} />
+        <text class="year" x={margin.left} y={height - 4}>1860</text>
+        <text class="year end" x={width - margin.right} y={height - 4}>2020</text>
       </svg>
     </article>
   {/each}
@@ -101,6 +103,16 @@
     stroke: var(--fg-on-light-mute);
     stroke-dasharray: 3 3;
     opacity: 0.55;
+  }
+
+  .year {
+    fill: var(--fg-on-light-mute);
+    font-family: var(--font-ui);
+    font-size: 9px;
+  }
+
+  .year.end {
+    text-anchor: end;
   }
 
   @media (max-width: 900px) {

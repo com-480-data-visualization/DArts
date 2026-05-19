@@ -31,7 +31,7 @@ export function buildIsoCounts(rows, decadeRange) {
  * @returns {string}
  */
 export function globeFillFor(iso3, count, maxCount, step) {
-  if (count === 0) return 'transparent';
+  if (!iso3 || count === 0) return 'var(--seq-0)';
   if (step >= 2 && TOP_THREE_ISO3.has(iso3)) return 'var(--accent-primary)';
   if (step === 0) return 'var(--seq-0)';
   const bucket = Math.min(4, Math.max(0, Math.floor((Math.log10(count) / Math.log10(maxCount)) * 4)));

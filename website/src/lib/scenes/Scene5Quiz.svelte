@@ -181,7 +181,9 @@
         {:else if result?.artist}
           <article class="result">
             {#if result.relaxed}
-              <p class="note">No exact match. Showing closest fit.</p>
+              <p class="note">
+                No exact match for all three answers. Showing the closest fit; try again to change the slice.
+              </p>
             {/if}
             <div class="result-heading">
               <div class="portrait" aria-hidden="true">{initials(result.artist.name)}</div>
