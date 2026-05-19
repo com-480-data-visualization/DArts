@@ -1,0 +1,1 @@
+.scroll-step.svelte-akplm5{min-height:70vh;display:flex;align-items:center;border-left:2px solid transparent;padding-left:var(--space-2);transition:border-color var(--duration-state) var(--ease-out)}.scroll-step.is-active.svelte-akplm5{border-color:var(--accent-primary)}@media(prefers-reduced-motion:reduce){.scroll-step.svelte-akplm5{transition:none}}
